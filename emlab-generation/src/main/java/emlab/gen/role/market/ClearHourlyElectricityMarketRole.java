@@ -30,6 +30,10 @@ import emlab.gen.domain.agent.DecarbonizationModel;
 import emlab.gen.domain.market.DecarbonizationMarket;
 import emlab.gen.domain.market.electricity.PpdpAnnual;
 import emlab.gen.repository.Reps;
+import ilog.concert.IloException;
+import ilog.concert.IloLinearNumExpr;
+import ilog.concert.IloNumVar;
+import ilog.cplex.IloCplex;
 
 /**
  * @author asmkhan
@@ -271,7 +275,7 @@ implements Role<DecarbonizationModel> {
                 Iterable<PpdpAnnual> ppdpAnnualList = reps.ppdpAnnualRepository
                         .findAllSubmittedPpdpAnnualForGivenMarketAndTime(market, getCurrentTick());
 
-                for
+
 
             }
 
