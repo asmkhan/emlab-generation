@@ -66,6 +66,7 @@ Role<EnergyProducer> {
     }
 
     @Transactional
+    // Change from PowerPlantDispatchPlan to PpdpAnnual
     public List<PpdpAnnual> createOffersForElectricitySpotMarket(EnergyProducer producer, long tick,
             boolean forecast, Map<Substance, Double> forecastedFuelPrices) {
         List<PpdpAnnual> ppdpList = new ArrayList<PpdpAnnual>();

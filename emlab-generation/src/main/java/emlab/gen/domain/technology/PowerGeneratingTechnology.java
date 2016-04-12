@@ -78,16 +78,6 @@ public class PowerGeneratingTechnology {
 
     private boolean intermittent;
 
-    private HourlyCSVTimeSeries availability;
-
-    public HourlyCSVTimeSeries getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(HourlyCSVTimeSeries availability) {
-        this.availability = availability;
-    }
-
     public double getBaseSegmentDependentAvailability() {
         return baseSegmentDependentAvailability;
     }
@@ -285,4 +275,27 @@ public class PowerGeneratingTechnology {
         this.intermittent = intermittent;
     }
 
+    /**
+     * @return
+     */
+
+    private HourlyCSVTimeSeries availability;
+
+    public void setAvailability(HourlyCSVTimeSeries availability) {
+        this.availability = availability;
+    }
+
+    public HourlyCSVTimeSeries getAvailability() {
+        return availability;
+    }
+
+    public boolean isWind() {
+        return name.contains("Wind");
+    }
+
+    public boolean isPhotovoltaic() {
+        return name.contains("Photovoltaic");
+    }
 }
+
+

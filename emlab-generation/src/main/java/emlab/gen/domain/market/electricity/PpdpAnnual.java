@@ -24,7 +24,7 @@ import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.market.Bid;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.trend.HourlyCSVTimeSeries;
-import emlab.gen.trend.HourlyTimeSeries;
+import emlab.gen.trend.HourlyVariableTimeSeries;
 
 /**
  * @author kaveri
@@ -34,11 +34,33 @@ import emlab.gen.trend.HourlyTimeSeries;
 @NodeEntity
 public class PpdpAnnual extends Bid {
 
+    @RelatedTo(type = "YEARLY_DISPATCHPLAN", elementClass = YearlySegment.class, direction = Direction.OUTGOING)
+    private YearlySegment yearlySegment;
+
     @RelatedTo(type = "PPDPANNUAL_POWERPLANT", elementClass = PowerPlant.class, direction = Direction.OUTGOING)
     private PowerPlant powerPlant;
 
 
-    private HourlyCSVTimeSeries generationInMwh;
+    //private HourlyCSVTimeSeries generationInMwh;
+
+    public YearlySegment getYearlySegment() {
+        return yearlySegment;
+    }
+
+    public void setYearlySegment(YearlySegment yearlySegment) {
+        this.yearlySegment = yearlySegment;
+    }
+
+    private HourlyVariableTimeSeries generationInMWh;
+
+    public HourlyVariableTimeSeries getGenerationInMWh() {
+        return generationInMWh;
+    }
+
+    public void setGenerationInMWh(HourlyVariableTimeSeries generationInMWh) {
+        this.generationInMWh = generationInMWh;
+    }
+
     private HourlyCSVTimeSeries availableHourlyAmount;
 
     public HourlyCSVTimeSeries getAvailableHourlyAmount() {
@@ -56,14 +78,6 @@ public class PpdpAnnual extends Bid {
 
     public void setPowerPlant(PowerPlant powerPlant) {
         this.powerPlant = powerPlant;
-    }
-
-    public HourlyTimeSeries getGenerationInMwh() {
-        return generationInMwh;
-    }
-
-    public void setGenerationInMwh(HourlyCSVTimeSeries generationInMwh) {
-        this.generationInMwh = generationInMwh;
     }
 
     public void specifyNotPersist(PowerPlant plant, EnergyProducer producer, ElectricitySpotMarket market,

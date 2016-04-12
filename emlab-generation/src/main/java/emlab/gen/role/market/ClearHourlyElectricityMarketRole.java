@@ -15,10 +15,6 @@
  ******************************************************************************/
 package emlab.gen.role.market;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,28 +42,32 @@ implements Role<DecarbonizationModel> {
     @Autowired
     private Reps reps;
 
-    String inputFileDemandInZoneA = "/home/sk/Test CSVs/15 Time Steps/Time_Series_Demand_A.csv";
-    String inputFileSolarIrradianceInZoneA = "/home/sk/Test CSVs/15 Time Steps/Solar_Irradiance_A.csv";
-    String inputFileWindSpeedInZoneA = "/home/sk/Test CSVs/15 Time Steps/Wind_Speed_A.csv";
-
-    String inputFileElasticDemandInZoneA = "/home/sk/Test CSVs/8760 Time Steps/Elastic_Time_Series_Demand_AA.csv";
-
-    BufferedReader brDemandInZoneA = null;
-    BufferedReader brSolarIrradianceInZoneA = null;
-    BufferedReader brWindSpeedInZoneA = null;
-    BufferedReader brElasticDemandInZoneA = null;
-
-    String line = "";
-
-    ArrayList<String> DemandInZoneA = new ArrayList<String>();
-    ArrayList<String> SolarIrradianceInZoneA = new ArrayList<String>();
-    ArrayList<String> WindSpeedInZoneA = new ArrayList<String>();
-    ArrayList<String> ElasticDemandInZoneA = new ArrayList<String>();
-
-    double[] totalDemand;
-    double[] SolarIrradiance;
-    double[] WindSpeed;
-    double[] ElasticDemandPerDay;
+    // String inputFileDemandInZoneA = "/home/sk/Test CSVs/15 Time
+    // Steps/Time_Series_Demand_A.csv";
+    // String inputFileSolarIrradianceInZoneA = "/home/sk/Test CSVs/15 Time
+    // Steps/Solar_Irradiance_A.csv";
+    // String inputFileWindSpeedInZoneA = "/home/sk/Test CSVs/15 Time
+    // Steps/Wind_Speed_A.csv";
+    //
+    // String inputFileElasticDemandInZoneA = "/home/sk/Test CSVs/8760 Time
+    // Steps/Elastic_Time_Series_Demand_AA.csv";
+    //
+    // BufferedReader brDemandInZoneA = null;
+    // BufferedReader brSolarIrradianceInZoneA = null;
+    // BufferedReader brWindSpeedInZoneA = null;
+    // BufferedReader brElasticDemandInZoneA = null;
+    //
+    // String line = "";
+    //
+    // ArrayList<String> DemandInZoneA = new ArrayList<String>();
+    // ArrayList<String> SolarIrradianceInZoneA = new ArrayList<String>();
+    // ArrayList<String> WindSpeedInZoneA = new ArrayList<String>();
+    // ArrayList<String> ElasticDemandInZoneA = new ArrayList<String>();
+    //
+    // double[] totalDemand;
+    // double[] SolarIrradiance;
+    // double[] WindSpeed;
+    // double[] ElasticDemandPerDay;
 
     ///////////////////////////////////////// parameters for country A
 
@@ -112,79 +112,83 @@ implements Role<DecarbonizationModel> {
 
     //////////////////////////////////////////////////////////////////
 
-    public void readInput() {
-        try {
-            brDemandInZoneA = new BufferedReader(new FileReader(inputFileDemandInZoneA));
-            while ((line = brDemandInZoneA.readLine()) != null) {
-                DemandInZoneA.add(line);
-            }
-
-            brSolarIrradianceInZoneA = new BufferedReader(new FileReader(inputFileSolarIrradianceInZoneA));
-            while ((line = brSolarIrradianceInZoneA.readLine()) != null) {
-                SolarIrradianceInZoneA.add(line);
-            }
-
-            brWindSpeedInZoneA = new BufferedReader(new FileReader(inputFileWindSpeedInZoneA));
-            while ((line = brWindSpeedInZoneA.readLine()) != null) {
-                WindSpeedInZoneA.add(line);
-            }
-
-            brElasticDemandInZoneA = new BufferedReader(new FileReader(inputFileElasticDemandInZoneA));
-            while ((line = brElasticDemandInZoneA.readLine()) != null) {
-                ElasticDemandInZoneA.add(line);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (brDemandInZoneA != null) {
-                try {
-                    brDemandInZoneA.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (brSolarIrradianceInZoneA != null) {
-                try {
-                    brSolarIrradianceInZoneA.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (brWindSpeedInZoneA != null) {
-                try {
-                    brWindSpeedInZoneA.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (brElasticDemandInZoneA != null) {
-                try {
-                    brElasticDemandInZoneA.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        totalDemand = new double[DemandInZoneA.size()];
-        for (int i = 0; i < totalDemand.length; i++) {
-            totalDemand[i] = Double.parseDouble(DemandInZoneA.get(i));
-        }
-        SolarIrradiance = new double[SolarIrradianceInZoneA.size()];
-        for (int i = 0; i < SolarIrradiance.length; i++) {
-            SolarIrradiance[i] = Double.parseDouble(SolarIrradianceInZoneA.get(i));
-        }
-        WindSpeed = new double[WindSpeedInZoneA.size()];
-        for (int i = 0; i < WindSpeed.length; i++) {
-            WindSpeed[i] = Double.parseDouble(WindSpeedInZoneA.get(i));
-        }
-        ElasticDemandPerDay = new double[ElasticDemandInZoneA.size()];
-        for (int i = 0; i < ElasticDemandPerDay.length; i++) {
-            ElasticDemandPerDay[i] = Double.parseDouble(ElasticDemandInZoneA.get(i));
-        }
-    }
+    // public void readInput() {
+    // try {
+    // brDemandInZoneA = new BufferedReader(new
+    // FileReader(inputFileDemandInZoneA));
+    // while ((line = brDemandInZoneA.readLine()) != null) {
+    // DemandInZoneA.add(line);
+    // }
+    //
+    // brSolarIrradianceInZoneA = new BufferedReader(new
+    // FileReader(inputFileSolarIrradianceInZoneA));
+    // while ((line = brSolarIrradianceInZoneA.readLine()) != null) {
+    // SolarIrradianceInZoneA.add(line);
+    // }
+    //
+    // brWindSpeedInZoneA = new BufferedReader(new
+    // FileReader(inputFileWindSpeedInZoneA));
+    // while ((line = brWindSpeedInZoneA.readLine()) != null) {
+    // WindSpeedInZoneA.add(line);
+    // }
+    //
+    // brElasticDemandInZoneA = new BufferedReader(new
+    // FileReader(inputFileElasticDemandInZoneA));
+    // while ((line = brElasticDemandInZoneA.readLine()) != null) {
+    // ElasticDemandInZoneA.add(line);
+    // }
+    //
+    // } catch (FileNotFoundException e) {
+    // e.printStackTrace();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // } finally {
+    // if (brDemandInZoneA != null) {
+    // try {
+    // brDemandInZoneA.close();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // if (brSolarIrradianceInZoneA != null) {
+    // try {
+    // brSolarIrradianceInZoneA.close();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // if (brWindSpeedInZoneA != null) {
+    // try {
+    // brWindSpeedInZoneA.close();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // if (brElasticDemandInZoneA != null) {
+    // try {
+    // brElasticDemandInZoneA.close();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // }
+    // totalDemand = new double[DemandInZoneA.size()];
+    // for (int i = 0; i < totalDemand.length; i++) {
+    // totalDemand[i] = Double.parseDouble(DemandInZoneA.get(i));
+    // }
+    // SolarIrradiance = new double[SolarIrradianceInZoneA.size()];
+    // for (int i = 0; i < SolarIrradiance.length; i++) {
+    // SolarIrradiance[i] = Double.parseDouble(SolarIrradianceInZoneA.get(i));
+    // }
+    // WindSpeed = new double[WindSpeedInZoneA.size()];
+    // for (int i = 0; i < WindSpeed.length; i++) {
+    // WindSpeed[i] = Double.parseDouble(WindSpeedInZoneA.get(i));
+    // }
+    // ElasticDemandPerDay = new double[ElasticDemandInZoneA.size()];
+    // for (int i = 0; i < ElasticDemandPerDay.length; i++) {
+    // ElasticDemandPerDay[i] = Double.parseDouble(ElasticDemandInZoneA.get(i));
+    // }
+    // }
 
     @Override
     public void act(DecarbonizationModel model) {
@@ -271,13 +275,20 @@ implements Role<DecarbonizationModel> {
             Iterable<DecarbonizationMarket> marketList = new ArrayList<DecarbonizationMarket>();
             marketList = reps.marketRepository.findAll();
 
-            for (DecarbonizationMarket market : marketList) {
+            for (DecarbonizationMarket market : reps.marketRepository.findAll()) {
                 Iterable<PpdpAnnual> ppdpAnnualList = reps.ppdpAnnualRepository
                         .findAllSubmittedPpdpAnnualForGivenMarketAndTime(market, getCurrentTick());
 
-
-
             }
+
+            /*
+             * Iterable<PowerPlantDispatchPlan> sortedListofPPDP =
+             * plantDispatchPlanRepository
+             * .findDescendingSortedPowerPlantDispatchPlansForSegmentForTime(
+             * currentSegment, getCurrentTick(), false);
+             * 
+             * for (PowerPlantDispatchPlan currentPPDP: sortedListofPPDP){
+             */
 
             for (Plant p : pp) {
 

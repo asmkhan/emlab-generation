@@ -117,7 +117,11 @@ public class HourlyCSVTimeSeries implements HourlyTimeSeries {
         this.filename = filename;
     }
 
+    /**
+     * @param actualNominalCapacity
+     */
     public void scalarMultiply(double scalar) {
+        // TODO Auto-generated method stub
         int i = 0;
         for (double element : this.hourlyArray) {
             this.hourlyArray[i] = element * scalar;
