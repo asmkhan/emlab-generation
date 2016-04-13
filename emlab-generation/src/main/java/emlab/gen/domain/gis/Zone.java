@@ -17,16 +17,10 @@ package emlab.gen.domain.gis;
 
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
-import emlab.gen.trend.HourlyCSVTimeSeries;
-
 @NodeEntity
 public class Zone {
 
     private String name;
-
-    private HourlyCSVTimeSeries windSpeed;
-
-    private HourlyCSVTimeSeries solarIrradiance;
 
     public String getName() {
         return name;
@@ -34,22 +28,6 @@ public class Zone {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public HourlyCSVTimeSeries getWindSpeed() {
-        return windSpeed;
-    }
-
-    public void setWindSpeed(HourlyCSVTimeSeries windSpeed) {
-        this.windSpeed = windSpeed;
-    }
-
-    public HourlyCSVTimeSeries getSolarIrradiance() {
-        return solarIrradiance;
-    }
-
-    public void setSolarIrradiance(HourlyCSVTimeSeries solarIrradiance) {
-        this.solarIrradiance = solarIrradiance;
     }
 
     @Override

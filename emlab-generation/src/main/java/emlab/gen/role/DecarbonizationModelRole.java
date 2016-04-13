@@ -251,7 +251,7 @@ public class DecarbonizationModelRole extends AbstractRole<DecarbonizationModel>
 
         logger.warn("executing matrix code");
         // clearHourlyElectricityMarketRole.populate_plantValues(pl);
-
+        clearHourlyElectricityMarketRole.act(model);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         logger.warn("  4. Clearing electricity spot and CO2 markets");
