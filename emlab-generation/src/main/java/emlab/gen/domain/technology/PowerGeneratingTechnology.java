@@ -78,6 +78,26 @@ public class PowerGeneratingTechnology {
 
     private boolean intermittent;
 
+    private boolean windPlant;
+
+    private boolean photovoltaicPlant;
+
+    public boolean isWindPlant() {
+        return windPlant;
+    }
+
+    public void setWindPlant(boolean windPlant) {
+        this.windPlant = name.contains("Wind");
+    }
+
+    public boolean isPhotovoltaicPlant() {
+        return photovoltaicPlant;
+    }
+
+    public void setPhotovoltaicPlant(boolean photovoltaicPlant) {
+        this.photovoltaicPlant = name.contains("Photovoltaic");
+    }
+
     public double getBaseSegmentDependentAvailability() {
         return baseSegmentDependentAvailability;
     }
@@ -289,13 +309,6 @@ public class PowerGeneratingTechnology {
         return availability;
     }
 
-    public boolean isWind() {
-        return name.contains("Wind");
-    }
-
-    public boolean isPhotovoltaic() {
-        return name.contains("Photovoltaic");
-    }
 }
 
 

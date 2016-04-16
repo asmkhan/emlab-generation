@@ -775,7 +775,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="coal" />
@@ -804,7 +806,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="lignite" />
@@ -830,7 +834,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="coal" />
@@ -857,7 +863,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="coal" />
@@ -884,7 +892,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="coal" />
@@ -911,7 +921,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="naturalgas" />
@@ -937,7 +949,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="naturalgas" />
@@ -963,7 +977,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="naturalgas" />
@@ -990,7 +1006,9 @@
 		p:baseSegmentDependentAvailability="0.7"
 		p:peakSegmentDependentAvailability="0.7"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="biomass" />
@@ -1016,7 +1034,9 @@
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.40"
 		p:peakSegmentDependentAvailability="0.05"
-		p:applicableForLongTermContract="true">
+		p:applicableForLongTermContract="true"
+		p:windPlant="true"
+		p:photovoltaicPlant="false">
 	</bean>
 	
 	<bean id="windInvestmentCostTimeSeries" class="emlab.gen.trend.GeometricTrend" p:growthRate="-0.0017610467" p:start="1214600" />
@@ -1038,7 +1058,9 @@
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.65"
 		p:peakSegmentDependentAvailability="0.08"
-		p:applicableForLongTermContract="true">
+		p:applicableForLongTermContract="true"
+		p:windPlant="true"
+		p:photovoltaicPlant="false">
 	</bean>
 	
 	<bean id="windOffshoreInvestmentCostTimeSeries" class="emlab.gen.trend.GeometricTrend" p:growthRate="-0.02058369" p:start="2450770" />
@@ -1059,7 +1081,9 @@
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.16"
 		p:peakSegmentDependentAvailability="0.08"
-		p:applicableForLongTermContract="true">
+		p:applicableForLongTermContract="true"
+		p:photovoltaicPlant="true"
+		p:windPlant="false">
 	</bean>
 	
 	<bean id="pvInvestmentCostTimeSeries" class="emlab.gen.trend.GeometricTrend" p:growthRate="-0.0247970888" p:start="2048300" />
@@ -1081,7 +1105,9 @@
 		p:baseSegmentDependentAvailability="1"
 		p:peakSegmentDependentAvailability="1"
 		p:applicableForLongTermContract="true"
-		p:intermittent="false">
+		p:intermittent="false"
+		p:windPlant="false"
+		p:photovoltaicPlant="false">
 		<property name="fuels">
 			<set>
 				<ref bean="uranium" />

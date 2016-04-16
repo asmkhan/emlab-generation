@@ -125,6 +125,12 @@ Role<EnergyProducer> {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+            // if (plant.getLocation().getZone().getName().equals("Country A")
+            // && plant.getTechnology().getName().contains("Wind")) {
+            //
+            // System.out.println(plant.getName());
+            //
+            // }
             //
             // System.out.println(plant.getName() + " |Technology: " +
             // plant.getTechnology() + " |Cap: "
