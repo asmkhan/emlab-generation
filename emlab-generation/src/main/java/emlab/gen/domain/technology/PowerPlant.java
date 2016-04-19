@@ -15,6 +15,7 @@
  ******************************************************************************/
 package emlab.gen.domain.technology;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.neo4j.graphdb.Direction;
@@ -32,6 +33,7 @@ import emlab.gen.domain.market.electricity.PowerPlantDispatchPlan;
 import emlab.gen.domain.market.electricity.Segment;
 import emlab.gen.repository.IntermittentTechnologyNodeLoadFactorRepository;
 import emlab.gen.repository.PowerPlantDispatchPlanRepository;
+import emlab.gen.trend.HourlyCSVTimeSeries;
 
 /**
  * Representation of a power plant
@@ -88,6 +90,32 @@ public class PowerPlant {
     private double expectedEndOfLife;
     private double actualNominalCapacity;
     private boolean historicalCvarDummyPlant;
+    private HourlyCSVTimeSeries actualHourlyNominalCapacity;
+
+    public HourlyCSVTimeSeries getActualHourlyNominalCapacity() {
+        return actualHourlyNominalCapacity;
+    }
+
+    public void setActualHourlyNominalCapacity(HourlyCSVTimeSeries actualHourlyNominalCapacity) {
+        this.actualHourlyNominalCapacity = actualHourlyNominalCapacity;
+    }
+
+    public HourlyCSVTimeSeries getHourlyAvailableCapacity() {
+        if (this.technology.getName().equals("Wind") || this.technology.getName().equals("WindOffshore")) {
+            this.actualHourlyNominalCapacity.setHourlyArray(location.getWindSpeed().getHourlyArray(0), 0);
+            this.actualHourlyNominalCapacity.scalarMultiply(this.actualNominalCapacity);
+            return this.actualHourlyNominalCapacity;
+        } else if (this.technology.getName().equals("Photovoltaic")) {
+            this.actualHourlyNominalCapacity.setHourlyArray(location.getSolarIrradiance().getHourlyArray(0), 0);
+            this.actualHourlyNominalCapacity.scalarMultiply(this.actualNominalCapacity);
+            return this.actualHourlyNominalCapacity;
+        } else {
+            // double [] capacity = new
+            // double[this.actualHourlyNominalCapacity.getHourlyArray(0).length];
+            Arrays.fill(this.actualHourlyNominalCapacity.getHourlyArray(0), this.actualNominalCapacity);
+            return this.actualHourlyNominalCapacity;
+        }
+    }
 
     public boolean isOperational(long currentTick) {
 
@@ -223,6 +251,7 @@ public class PowerPlant {
             return 0;
         }
     }
+
 
     public double getAvailableCapacity(long currentTick) {
         if (isOperational(currentTick)) {
@@ -506,7 +535,7 @@ public class PowerPlant {
         this.calculateAndSetActualInvestedCapital(time);
         this.calculateAndSetActualFixedOperatingCosts(time);
         this.setExpectedEndOfLife(time + getActualPermittime()
-                + getActualLeadtime() + getTechnology().getExpectedLifetime());
+        + getActualLeadtime() + getTechnology().getExpectedLifetime());
     }
 
     @Transactional

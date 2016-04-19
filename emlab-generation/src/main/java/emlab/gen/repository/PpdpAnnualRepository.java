@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import emlab.gen.domain.market.DecarbonizationMarket;
 import emlab.gen.domain.market.electricity.PpdpAnnual;
+import emlab.gen.domain.technology.PowerPlant;
 
 /**
  * @author kaveri
@@ -38,5 +39,9 @@ public interface PpdpAnnualRepository extends GraphRepository<PpdpAnnual> {
     // g.idx('__types__')[[className:'emlab.gen.domain.technology.PowerPlant']].
     @Query(value = "g.idx('__types__')[[className:'emlab.gen.domain.market.electricity.PpdpAnnual']].propertyFilter('time', FilterPipe.Filter.EQUAL, time).filter{it.status == 1}", type = QueryType.Gremlin)
     public Iterable<PpdpAnnual> findAllSubmittedPpdpAnnualForGivenTime(
+            @Param("time") long time);
+
+    @Query(value = "g.v(plant).in('PPDPANNUAL_POWERPLANT').filter{it.__type__=='emlab.gen.domain.market.electricity.PpdpAnnual'}", type = QueryType.Gremlin)
+    public PpdpAnnual findAllPPDPAnnualforPlantsForAllMarketsForCurrentTick(@Param("plant") PowerPlant plant,
             @Param("time") long time);
 }

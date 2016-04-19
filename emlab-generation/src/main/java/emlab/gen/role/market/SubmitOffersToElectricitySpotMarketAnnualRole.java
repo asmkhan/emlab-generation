@@ -104,8 +104,9 @@ Role<EnergyProducer> {
                 producer = plant.getOwner();
             }
 
-            HourlyCSVTimeSeries hourlyCapacity = plant.getTechnology().getAvailability();
-            hourlyCapacity.scalarMultiply(plant.getActualNominalCapacity());
+            HourlyCSVTimeSeries hourlyCapacity = plant.getActualHourlyNominalCapacity();
+            // hourlyCapacity.setHourlyArray(plant.getActualNominalCapacity(),tick);
+            // hourlyCapacity.scalarMultiply(plant.getActualNominalCapacity());
             double mc;
             double price;
             if (!forecast) {

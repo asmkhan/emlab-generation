@@ -23,7 +23,6 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 
 import agentspring.simulation.SimulationParameter;
-import emlab.gen.trend.HourlyCSVTimeSeries;
 import emlab.gen.trend.TimeSeriesImpl;
 
 @NodeEntity
@@ -78,25 +77,25 @@ public class PowerGeneratingTechnology {
 
     private boolean intermittent;
 
-    private boolean windPlant;
-
-    private boolean photovoltaicPlant;
-
-    public boolean isWindPlant() {
-        return windPlant;
-    }
-
-    public void setWindPlant(boolean windPlant) {
-        this.windPlant = name.contains("Wind");
-    }
-
-    public boolean isPhotovoltaicPlant() {
-        return photovoltaicPlant;
-    }
-
-    public void setPhotovoltaicPlant(boolean photovoltaicPlant) {
-        this.photovoltaicPlant = name.contains("Photovoltaic");
-    }
+    // private boolean windPlant;
+    //
+    // private boolean photovoltaicPlant;
+    //
+    // public boolean isWindPlant() {
+    // return windPlant;
+    // }
+    //
+    // public void setWindPlant(boolean windPlant) {
+    // this.windPlant = name.contains("Wind");
+    // }
+    //
+    // public boolean isPhotovoltaicPlant() {
+    // return photovoltaicPlant;
+    // }
+    //
+    // public void setPhotovoltaicPlant(boolean photovoltaicPlant) {
+    // this.photovoltaicPlant = name.contains("Photovoltaic");
+    // }
 
     public double getBaseSegmentDependentAvailability() {
         return baseSegmentDependentAvailability;
@@ -299,15 +298,15 @@ public class PowerGeneratingTechnology {
      * @return
      */
 
-    private HourlyCSVTimeSeries availability;
-
-    public void setAvailability(HourlyCSVTimeSeries availability) {
-        this.availability = availability;
-    }
-
-    public HourlyCSVTimeSeries getAvailability() {
-        return availability;
-    }
+    // private HourlyCSVTimeSeries availability;
+    //
+    // public void setAvailability(HourlyCSVTimeSeries availability) {
+    // this.availability = availability;
+    // }
+    //
+    // public HourlyCSVTimeSeries getAvailability() {
+    // return availability;
+    // }
 
 }
 
