@@ -20,14 +20,11 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.agent.DecarbonizationModel;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.repository.Reps;
 import ilog.concert.IloException;
-import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
 /**
@@ -161,23 +158,24 @@ implements Role<DecarbonizationModel> {
              * for (PowerPlantDispatchPlan currentPPDP: sortedListofPPDP){
              */
 
-            for (PowerPlant p : powerPlantList) {
+            //            for (PowerPlant p : powerPlantList) {
+            //
+            //                // ArrayList<IloNumVar> generationCapacityOfPlant = new
+            //                // ArrayList<IloNumVar>(timeSteps);
+            //
+            //                for (int i = 0; i <timeSteps; i++) {
+            //
+            //                    //                    if (p.getZone().equals("Zone Country A") &&
+            //                    //                            p.getTechnology().equals("Wind")) {
+            //                    IloNumVar [] generationCapacityofPlant = new IloNumVar[timeSteps];
+            //                    generationCapacityofPlant[i] = cplex.numVar(0,
+            //                            p.getActualHourlyNominalCapacity().getHourlyArray(0)[i]);
+            //
+            //                    System.out.println(generationCapacityofPlant[i]);
+            //
+            //                }
+            //            }
 
-                // ArrayList<IloNumVar> generationCapacityOfPlant = new
-                // ArrayList<IloNumVar>(timeSteps);
-
-                for (int i = 0; i <timeSteps; i++) {
-
-                    //                    if (p.getZone().equals("Zone Country A") &&
-                    //                            p.getTechnology().equals("Wind")) {
-                    IloNumVar [] generationCapacityofPlant = new IloNumVar[timeSteps];
-                    generationCapacityofPlant[i] = cplex.numVar(0,
-                            p.getActualHourlyNominalCapacity().getHourlyArray(0)[i]);
-
-                    System.out.println(generationCapacityofPlant[i]);
-
-                }
-            }
             //
             // // else if (p.getZone().equals("Zone Country A") &&
             // // p.getTechnology().equals("Photovoltaic")) {
