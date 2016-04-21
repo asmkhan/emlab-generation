@@ -42,6 +42,7 @@ implements Role<DecarbonizationModel> {
 
     @Autowired
     Neo4jTemplate template;
+
     // String inputFileDemandInZoneA = "/home/sk/Test CSVs/15 Time
     // Steps/Time_Series_Demand_A.csv";
     // String inputFileSolarIrradianceInZoneA = "/home/sk/Test CSVs/15 Time
@@ -113,8 +114,6 @@ implements Role<DecarbonizationModel> {
     //////////////////////////////////////////////////////////////////
 
 
-
-    @Autowired
     @Override
     @Transactional
     public void act(DecarbonizationModel model) {

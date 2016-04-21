@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import agentspring.role.AbstractRole;
 import emlab.gen.domain.agent.CommoditySupplier;
 import emlab.gen.domain.agent.DecarbonizationModel;
 import emlab.gen.domain.agent.EnergyConsumer;
@@ -734,5 +733,4 @@ public abstract class AbstractClearElectricitySpotMarketRole<T extends Decarboni
             }
         }
     }
-
 }

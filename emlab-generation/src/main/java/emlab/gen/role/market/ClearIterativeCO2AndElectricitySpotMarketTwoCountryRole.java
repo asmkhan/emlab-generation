@@ -24,8 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
+//import agentspring.role.Role;
+//import agentspring.role.RoleComponent;
 import emlab.gen.domain.agent.DecarbonizationModel;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
@@ -974,7 +974,7 @@ AbstractClearElectricitySpotMarketRole<DecarbonizationModel> implements Role<Dec
                                 clearingTick + model.getCentralForecastingYear(),
                                 expectedBankedPermits,
                                 government)
-                                : futureCap;
+                        : futureCap;
                                 // logger.warn("effective future cap: {}", effectiveCapInFuture);
                                 effectiveCapInFuture -= (government.isActivelyAdjustingTheCO2Cap() & getCurrentTick() > 0) ? renewableAdaptiveCO2CapRole
                                         .calculatedExpectedCapReductionForTimeStep(government, clearingTick,
