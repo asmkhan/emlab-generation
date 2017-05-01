@@ -24,34 +24,35 @@
 		p:name="Decarbonization Model" p:simulationLength="40"
 		p:co2TradingImplemented="false" p:realRenewableDataImplemented="true"
 		p:iterationSpeedFactor="3" p:iterationSpeedCriterion="0.005" p:longTermContractsImplemented="false"
-		p:capDeviationCriterion="0.03" p:simpleCapacityMarketEnabled="true"
+		p:capDeviationCriterion="0.03" p:simpleCapacityMarketEnabled="false"
 		p:deletionOldPPDPBidsAndCashFlowsEnabled="false" p:deletionAge="5"
 		p:noPrivateIntermittentRESInvestment="false">
 	</bean>
-
+	
 	<!-- Demand Growth Trend -->
 
 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="run-37" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-36" />
 	
 	<!-- Fuel Prices -->
 	
 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="run-37" />
+		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-36" />
 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="run-37" />
+		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-36" />
 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="run-37" />
+		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-36" />
 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="run-37" />
+		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-36" />
 
 	<!-- Substances -->
 	
 	<bean id="coal" class="emlab.gen.domain.technology.Substance" p:name="Coal"
 		p:quality="1" p:energyDensity="1000" p:co2Density="0.095" p:unit="GJ"  />
 		
-	<bean id="naturalgas" class="emlab.gen.domain.technology.Substance" p:name="Natural Gas" 
-		p:quality="1" p:energyDensity="1000" p:co2Density="0.05194" p:unit="GJ" />
+	<bean id="naturalgas" class="emlab.gen.domain.technology.Substance"
+		p:name="Natural Gas" p:quality="1" p:energyDensity="1000"
+			p:co2Density="0.05194" p:unit="GJ" />
 		
 	<bean id="biomass" class="emlab.gen.domain.technology.Substance"
 		p:name="Biomass" p:quality="1" p:energyDensity="1000" p:co2Density="0" p:unit="GJ" />
@@ -72,7 +73,7 @@
 	<!-- PowerGrid -->
 	
 	<bean id="nlNode" class="emlab.gen.domain.technology.PowerGridNode"
-	p:capacityMultiplicationFactor="1.0">
+	p:name="nlNode" p:capacityMultiplicationFactor="1.0">
 		<property name="zone" ref="nl" />
 	</bean>
 	
@@ -104,11 +105,11 @@
 	<bean id="yearlySegment" class="emlab.gen.domain.market.electricity.YearlySegment"
 		p:yearlySegmentLengthInHours="8760" p:yearlySegmentID="1" />
 		
-	<!-- In elastic hourly demand for ESM for NL -->
+	<!-- Inelastic hourly demand for ESM in NL -->
 	
 	<bean id="InElasticDemandNL" class="emlab.gen.trend.HourlyCSVTimeSeries" 
 		p:filename="/data/Salman/Inelastic Demand/inelastic.csv" p:variableName="nl100" p:timeSeriesAreInDifferentColumns="true" 
-		p:lengthInHours="8760" p:delimiter="," />	
+		p:lengthInHours="8760" p:delimiter="," />
 		
 	<!-- Segments of load duration curves -->
 	
@@ -163,11 +164,10 @@
 
 	<!-- Markets -->
 	<!-- Electricity Spot -->
-	
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="false"
 		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
-		p:storageImplemented="false">
+		p:storageImplemented="false" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />
 		<property name="zone" ref="nl" />
@@ -262,6 +262,7 @@
 	</bean>
 
 	<!-- Commodity Markets -->
+	
 	<bean id="coalMarket" class="emlab.gen.domain.market.CommodityMarket"
 		p:auction="false" p:name="Coal market">
 		<property name="substance" ref="coal" />
@@ -283,6 +284,7 @@
 	</bean>
 
 	<!-- CO2 Auction -->
+	
 	<bean id="co2Auction" class="emlab.gen.domain.market.CO2Auction"
 		p:auction="true" p:referencePrice="0" p:name="CO2 auction"
 		p:substance-ref="co2" />
@@ -318,66 +320,100 @@
 		p:contractWillingnessToPayFactor="1.2">
 		<property name="name" value="Energy consumer" />
 	</bean>
+	
+	<bean id="randomNumberSeedListA" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p1" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
+		
+	<bean id="randomNumberSeedListB" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p2" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
+		
+	<bean id="randomNumberSeedListC" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p3" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
+		
+	<bean id="randomNumberSeedListD" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p4" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
+		
+	<bean id="randomNumberSeedListE" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p5" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
+		
+	<bean id="randomNumberSeedListTINL" class="emlab.gen.trend.HourlyCSVTimeSeries" 
+		p:filename="/data/Salman/Stochastic Trends/RandomPPPrices.csv" p:variableName="p16" p:timeSeriesAreInDifferentColumns="true" 
+		p:delimiter="," p:lengthInHours="1000"/>	
 
 	<bean id="energyProducerA" class="emlab.gen.domain.agent.EnergyProducer"
 		p:name="Energy Producer A" p:cash="6e9"
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
 		p:numberOfYearsBacklookingForForecasting="5"
-		p:investorMarket-ref="dutchElectricitySpotMarket"/>
+		p:investorMarket-ref="dutchElectricitySpotMarket">
+		<property name="randomNumberSeed" ref="randomNumberSeedListA" />
+	</bean>
 		
 	<bean id="energyProducerB" class="emlab.gen.domain.agent.EnergyProducer"
 		p:name="Energy Producer B" p:cash="6e9"
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
 		p:numberOfYearsBacklookingForForecasting="5"
-		p:investorMarket-ref="dutchElectricitySpotMarket"/>
+		p:investorMarket-ref="dutchElectricitySpotMarket">
+		<property name="randomNumberSeed" ref="randomNumberSeedListB" />
+	</bean>
 		
 	<bean id="energyProducerC" class="emlab.gen.domain.agent.EnergyProducer"
 		p:name="Energy Producer C" p:cash="6e9"
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
 		p:numberOfYearsBacklookingForForecasting="5"
-		p:investorMarket-ref="dutchElectricitySpotMarket"/>
+		p:investorMarket-ref="dutchElectricitySpotMarket">
+		<property name="randomNumberSeed" ref="randomNumberSeedListC" />
+	</bean>
 		
 	<bean id="energyProducerD" class="emlab.gen.domain.agent.EnergyProducer"
 		p:name="Energy Producer D" p:cash="6e9"
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
 		p:numberOfYearsBacklookingForForecasting="5"
-		p:investorMarket-ref="dutchElectricitySpotMarket"/>
+		p:investorMarket-ref="dutchElectricitySpotMarket">
+		<property name="randomNumberSeed" ref="randomNumberSeedListD" />
+	</bean>
 		
 	<bean id="energyProducerE" class="emlab.gen.domain.agent.EnergyProducer"
 		p:name="Energy Producer E" p:cash="6e9"
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
 		p:numberOfYearsBacklookingForForecasting="5"
-		p:investorMarket-ref="dutchElectricitySpotMarket"/>
+		p:investorMarket-ref="dutchElectricitySpotMarket">
+		<property name="randomNumberSeed" ref="randomNumberSeedListE" />
+	</bean>
 		
 	<!-- Investment Roles -->
 	
@@ -406,24 +442,6 @@
 	<bean id="StakeholderE" class="emlab.gen.domain.agent.Stakeholder" p:name="Stakeholder E">
 		<property name="energyProducerForPaymentOfDividends" ref="energyProducerE" />
 	</bean>
-	
-	<!-- 	Capacity Market for NL -->
-	
-	<bean id="regulatorA" class="emlab.gen.domain.agent.Regulator"
-		p:name="Regulator A" p:capacityMarketPriceCap="60000"
-		p:reserveMargin="0.08" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
-		p:reserveDemandLowerMargin="0.025" p:reserveDemandUpperMargin="0.025"
-		p:numberOfYearsLookingBackToForecastDemand="4"> 
-		<property name="zone" ref="nl" />
-	</bean>
-		
-	<bean id="capacityMarketA" class="emlab.gen.domain.market.capacity.CapacityMarket"
-		p:name="Capacity Market A" p:storageBiddingAllowed="false" p:renewableTargetInvestorCanInvest="true"
-		p:baseCapacityMarketDemand="19272">
-		<property name="regulator" ref="regulatorA"/>
-		<property name="consumer" ref="energyConsumer"/>
-		<property name="zone" ref="nl" />
-	</bean>
 
 	<!-- Renewable Targets NL -->
 	
@@ -442,6 +460,7 @@
 			<ref bean="biomassTargetCountryNL" />
 		</set>
 	</property>
+	<property name="randomNumberSeed" ref="randomNumberSeedListTINL" />
 	</bean>
 	
 	<bean id="windTargetCountryNL" class="emlab.gen.domain.policy.PowerGeneratingTechnologyTarget"
@@ -472,67 +491,9 @@
 	<bean id="powerPlantMaintainer" class="emlab.gen.domain.agent.PowerPlantMaintainer"
 		p:name="Power Plant Maintainer" />
 
-	<bean id="dutchPowerPortfolio" class="emlab.gen.domain.factory.ElectricityProducerFactory">
-		<property name="capacityMargin" value="0.25" />
-		<property name="maximumBaseLoadForSpotMarket" value="19272" />
-		<property name="portfolioShares">
-			<map>
-				<entry>
-					<key>
-						<ref bean="coalPulverizedSuperCritical" />
-					</key>
-					<value>0.2160</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="CCGT" />
-					</key>
-					<value>0.6152</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="nuclearPGT" />
-					</key>
-					<value>0.0146</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="hydro" />
-					</key>
-					<value>0.0011</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="biomassPGT" />
-					</key>
-					<value>0.0377</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="windOffshorePGT" />
-					</key>
-					<value>0.0067</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="windPGT" />
-					</key>
-					<value>0.0786</value>
-				</entry>
-				<entry>
-					<key>
-						<ref bean="photovoltaicPGT" />
-					</key>
-					<value>0.0297</value>
-				</entry>
-			</map>
-		</property>
-		<property name="nodes">
-			<set>
-				<ref bean="nlNode" />
-			</set>
-		</property>
-		<property name="market" ref="dutchElectricitySpotMarket" />
+	<!-- Power plant Factory -->
+	<bean id="PowerPlantList" class="emlab.gen.domain.factory.PowerPlantCSVFactory" 
+	p:csvFile="/data/Salman/Initial Portfolio/NL.csv">
 		<property name="producers">
 			<list>
 				<ref bean="energyProducerA" />
@@ -540,8 +501,27 @@
 				<ref bean="energyProducerC" />
 				<ref bean="energyProducerD" />
 				<ref bean="energyProducerE" />
+				<ref bean="renewableTargetInvestorCountryNL" />
 			</list>
 		</property>
+		<property name="technologies">
+			<list>
+				<ref bean="CCGT" />
+				<ref bean="coalPulverizedSuperCritical" />
+				<ref bean="biomassPGT" />
+				<ref bean="windPGT" />
+				<ref bean="windOffshorePGT" />
+				<ref bean="hydro" />
+				<ref bean="photovoltaicPGT" />
+				<ref bean="nuclearPGT" />
+			</list>
+		</property>
+		<property name="powerGridNodes">
+			<list>
+				<ref bean="nlNode"/>
+			</list>
+		</property>
+		
 	</bean>
 
 	<!-- CO2 Tax -->
@@ -563,6 +543,7 @@
 		p:increment="0" p:minValue="0" />
 
 	<!-- Government -->
+	
 	<bean id="government" class="emlab.gen.domain.agent.Government"
 		p:name="European Government" p:co2Penalty="500">
 		<property name="co2TaxTrend" ref="co2TaxTrend" />
@@ -864,5 +845,11 @@
 		p:filename="/data/learningCurves.csv" p:delimiter="," p:variableName="nuclearPGT_OM" />
 	<bean id="nuclearEfficiencyTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader" p:startingYear="-50"
 		p:filename="/data/learningCurves.csv" p:delimiter="," p:variableName="nuclearPGT_Eff" />
+		
+		<!-- 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.StochasticTrend" p:name="DemandGrowthTrendNL" p:max="1.02" p:min="1.02" /> -->
+<!-- 	<bean id="coalPrice" class="emlab.gen.trend.StochasticTrend" p:name="Coal Price" p:max="3.6" p:min="3.6" /> -->
+<!-- 	<bean id="gasPrice" class="emlab.gen.trend.StochasticTrend" p:name="Gas Price" p:max="7.5" p:min="7.5" /> -->
+<!-- 	<bean id="biomassPrice" class="emlab.gen.trend.StochasticTrend" p:name="Biomass Price" p:max="4" p:min="4" /> -->
+<!-- 	<bean id="uraniumPrice" class="emlab.gen.trend.StochasticTrend" p:name="Uranium Price" p:max="1.286" p:min="1.286" /> -->
 
 </beans>

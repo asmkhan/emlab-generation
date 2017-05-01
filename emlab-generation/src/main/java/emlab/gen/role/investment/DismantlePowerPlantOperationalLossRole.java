@@ -345,7 +345,7 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                     // demandGrowthFactor = Math.pow(avgGrowthFactor /
                     // iteration,
                     // (double) (getCurrentTick() + iterator));
-                    demandGrowthFactor = (avgGrowthFactor / iteration);
+                    demandGrowthFactor = (avgGrowthFactor / iteration) + 0.04;
                 }
 
                 // Could not understand the purpose of the following
@@ -653,11 +653,11 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                             // downpayment);
                         }
                     }
-                    if (getCurrentTick() < 8 && plant.getActualLifetime() < 15) {
+                    if (getCurrentTick() < 8 && plant.getActualLifetime() < 17) {
                         // logger.warn(" ********************** TOO early to
                         // dismantle: " + plant.getName() + " Age "
                         // + plant.getActualLifetime());
-                    } else if (market.isDailyDemandResponseImplemented() && plant.getActualLifetime() < 10
+                    } else if (market.isDailyDemandResponseImplemented() && plant.getActualLifetime() < 11
                             && !plant.getOwner().isSimpleCapacityMarketEnabled()) {
 
                     } else {

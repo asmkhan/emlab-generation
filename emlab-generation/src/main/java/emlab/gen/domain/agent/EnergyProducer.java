@@ -23,6 +23,7 @@ import agentspring.agent.Agent;
 import agentspring.simulation.SimulationParameter;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.role.investment.GenericInvestmentRole;
+import emlab.gen.trend.HourlyCSVTimeSeries;
 
 @NodeEntity
 public class EnergyProducer extends DecarbonizationAgent implements Agent {
@@ -32,6 +33,9 @@ public class EnergyProducer extends DecarbonizationAgent implements Agent {
 
     @RelatedTo(type = "INVESTOR_MARKET", elementClass = ElectricitySpotMarket.class, direction = Direction.OUTGOING)
     private ElectricitySpotMarket investorMarket;
+
+    @RelatedTo(type = "RANDOM_NUMBER_SEED_ARRAY", elementClass = HourlyCSVTimeSeries.class, direction = Direction.OUTGOING)
+    private HourlyCSVTimeSeries randomNumberSeed;
 
     @SimulationParameter(label = "Price Mark-Up for spotmarket (as multiplier)", from = 1, to = 2)
     private double priceMarkUp;
@@ -84,6 +88,14 @@ public class EnergyProducer extends DecarbonizationAgent implements Agent {
     private double historicalCVarInterestRateIncreaseForNewTechnologies;
     private long historicalCvarBacklookingYears;
     private boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+
+    public HourlyCSVTimeSeries getRandomNumberSeed() {
+        return randomNumberSeed;
+    }
+
+    public void setRandomNumberSeed(HourlyCSVTimeSeries randomNumberSeed) {
+        this.randomNumberSeed = randomNumberSeed;
+    }
 
     public boolean isWillingToInvest() {
         return willingToInvest;

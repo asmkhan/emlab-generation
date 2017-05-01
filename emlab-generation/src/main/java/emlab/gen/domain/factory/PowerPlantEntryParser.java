@@ -139,6 +139,7 @@ public class PowerPlantEntryParser implements CSVEntryParser<PowerPlant> {
         }
         try {
             return createPowerPlant(name, pgt, energyProducer, powerGridNode, age, capacity, efficiency);
+
         } catch (NullPointerException e) {
             logger.warn("ERROR: Name: \"" + name + "\",Pgt: " + pgt + ", EnergyProducer" + energyProducer + ", Node:"
                     + powerGridNode + ", Age:" + age + ", Capacity: " + capacity + ", Efficiency:" + efficiency);

@@ -103,6 +103,12 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
 
             double numberofMarkets = reps.marketRepository.countAllElectricitySpotMarkets();
 
+            double[] maxInelasticDemandInMarkets = new double[(int) numberofMarkets];
+
+            for (int i = 0; i < numberofMarkets; i++) {
+                maxInelasticDemandInMarkets[i] = 0;
+            }
+
             int numberOfElectricitySpotMarkets = (int) numberofMarkets;
 
             int numberOfPowerPlants = reps.powerPlantRepository.findNumberOfOperationalPowerPlants(getCurrentTick());
@@ -120,12 +126,14 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
             // Create the PTDF variables for the multi node case
             if (numberofInterconnectors == 3) {
                 int interconnectorIndex = 0;
-                logger.warn("Number of interconnectors are: " + numberofInterconnectors);
+                // logger.warn("Number of interconnectors are: " +
+                // numberofInterconnectors);
 
                 // for (Interconnector interconnector :
                 // reps.interconnectorRepository.findAllInterconnectors()) {
                 for (Interconnector interconnector : interconnectorList) {
-                    logger.warn("Name of interconnector: " + interconnector.getName());
+                    // logger.warn("Name of interconnector: " +
+                    // interconnector.getName());
                     linesSusceptances[interconnectorIndex] = interconnector.getTransmissionLineSusceptance();
                     interconnectorIndex++;
                 }
@@ -257,9 +265,11 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                             for (Interconnector interconnector : interconnectorList) {
 
                                 if (i == 0) {
-                                    logger.warn("Interconnector name: " + interconnector.getName().toString()
-                                            + "Capacity: "
-                                            + interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
+                                    // logger.warn("Interconnector name: " +
+                                    // interconnector.getName().toString()
+                                    // + "Capacity: "
+                                    // +
+                                    // interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
                                 }
                                 crossBorderFlowVariablesForAllInterconnectors[interconnectorIndex][i] = cplex.numVar(
                                         -interconnector.getInterconnectorCapacity().getValue(getCurrentTick()),
@@ -318,10 +328,10 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                         // storageDischargingInMW[marketIndex][i]);
                         // }
 
-                        objective.addTerm(storageTechnologyInMarket.getMarginalCostOfCharging(),
-                                storageChargingInMW[marketIndex][i]);
-                        objective.addTerm(storageTechnologyInMarket.getMarginalCostOfDischarging(),
-                                storageDischargingInMW[marketIndex][i]);
+                        // objective.addTerm(storageTechnologyInMarket.getMarginalCostOfCharging(),
+                        // storageChargingInMW[marketIndex][i]);
+                        // objective.addTerm(storageTechnologyInMarket.getMarginalCostOfDischarging(),
+                        // storageDischargingInMW[marketIndex][i]);
                     }
 
                     generationEquationsForAllMarkets[marketIndex][i] = cplex.linearNumExpr();
@@ -340,6 +350,12 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                                     .getHourlyArray(0)[i],
                             market.getYearlySegmentLoad().getHourlyInElasticCurrentDemandForYearlySegment()
                                     .getHourlyArray(0)[i]);
+
+                    if (market.getYearlySegmentLoad().getHourlyInElasticCurrentDemandForYearlySegment()
+                            .getHourlyArray(0)[i] > maxInelasticDemandInMarkets[marketIndex])
+                        maxInelasticDemandInMarkets[marketIndex] = market.getYearlySegmentLoad()
+                                .getHourlyInElasticCurrentDemandForYearlySegment().getHourlyArray(0)[i];
+
                     valueOfLostLoadInMWH[marketIndex][i] = cplex.numVar(0, Double.MAX_VALUE);
                     demandEquationsForAllMarkets[marketIndex][i] = cplex.linearNumExpr();
                     demandEquationsForAllMarkets[marketIndex][i].addTerm(1,
@@ -361,7 +377,8 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                                                 elasticDemandForAllMarkets[marketIndex][i - (demandShiftFactor - 1)
                                                         + j]);
                         }
-                        objective.addTerm(market.getDemandShiftCost(), elasticDemandForAllMarkets[marketIndex][i]);
+                        // objective.addTerm(market.getDemandShiftCost(),
+                        // elasticDemandForAllMarkets[marketIndex][i]);
                     }
 
                     generationEquationsForAllMarkets[marketIndex][i].addTerm(1, valueOfLostLoadInMWH[marketIndex][i]);
@@ -444,6 +461,11 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                 for (int i = 0; i < timeSteps; i++) {
                     constraints[0][i] = (IloRange) cplex.addEq(generationEquationsForAllMarkets[0][i],
                             demandEquationsForAllMarkets[0][i]);
+                    for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
+                        if (market.isDailyDemandResponseImplemented()) {
+                            cplex.addLe(demandEquationsForAllMarkets[0][i], maxInelasticDemandInMarkets[0]);
+                        }
+                    }
                 }
                 marketIndex = 0;
                 for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
@@ -480,14 +502,25 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                 }
                 break;
             case 2:
-                for (int j = 0; j < timeSteps; j++) {
 
+                for (int j = 0; j < timeSteps; j++) {
                     constraints[0][j] = (IloRange) cplex.addEq(generationEquationsForAllMarkets[0][j], cplex.sum(
                             demandEquationsForAllMarkets[0][j], crossBorderFlowVariablesForAllInterconnectors[0][j]));
-
                     constraints[1][j] = (IloRange) cplex.addEq(generationEquationsForAllMarkets[1][j], cplex.diff(
                             demandEquationsForAllMarkets[1][j], crossBorderFlowVariablesForAllInterconnectors[0][j]));
 
+                    marketIndex = 0;
+                    for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
+                        if (market.isDailyDemandResponseImplemented()) {
+                            cplex.addLe(demandEquationsForAllMarkets[marketIndex][j],
+                                    maxInelasticDemandInMarkets[marketIndex]);
+                        }
+                        marketIndex++;
+                    }
+                    // cplex.addLe(demandEquationsForAllMarkets[0][j],
+                    // maxInelasticDemandInMarkets[0]);
+                    // cplex.addLe(demandEquationsForAllMarkets[1][j],
+                    // maxInelasticDemandInMarkets[1]);
                 }
                 marketIndex = 0;
                 for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
@@ -505,6 +538,11 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
 
                             cplex.addEq(storageContentExpressionsForAllMarkets[marketIndex][i],
                                     stateOfChargeInMWh[marketIndex][i]);
+
+                            // cplex.addLe(maxInelasticDemandInMarkets[marketIndex],
+                            // demandEquationsForAllMarkets[marketIndex][i -
+                            // 1]);
+
                         }
                         cplex.addEq(storageContentExpressionsForAllMarkets[marketIndex][timeSteps - 1],
                                 storageTechnologyInMarket.getFinalStateOfChargeInStorage());
@@ -523,6 +561,7 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                     marketIndex++;
                 }
                 break;
+
             case 3:
 
                 for (int j = 0; j < timeSteps; j++) {
@@ -556,11 +595,26 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                                                     demandEquationsForAllMarkets[1][j])),
                                     cplex.prod(PTDFCtoBC, cplex.diff(generationEquationsForAllMarkets[2][j],
                                             demandEquationsForAllMarkets[2][j]))));
-                }
 
+                    marketIndex = 0;
+                    for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
+                        if (market.isDailyDemandResponseImplemented()) {
+                            cplex.addLe(demandEquationsForAllMarkets[marketIndex][j],
+                                    maxInelasticDemandInMarkets[marketIndex]);
+                        }
+                        marketIndex++;
+                    }
+                    // cplex.addLe(demandEquationsForAllMarkets[0][j],
+                    // maxInelasticDemandInMarkets[0]);
+                    // cplex.addLe(demandEquationsForAllMarkets[1][j],
+                    // maxInelasticDemandInMarkets[1]);
+                    // cplex.addLe(demandEquationsForAllMarkets[2][j],
+                    // maxInelasticDemandInMarkets[2]);
+                }
                 marketIndex = 0;
                 for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
-                    logger.warn("Name of the market is {}", market.getName());
+                    // logger.warn("Name of the market is {}",
+                    // market.getName());
                     if (market.isStorageImplemented()) {
 
                         EnergyStorageTechnology storageTechnologyInMarket = reps.energyStorageTechnologyRepository
@@ -633,7 +687,15 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                 }
 
                 int ind = 0;
-                logger.warn("Carbon constraint = " + cplex.getDual(carbonConstraint));
+                double carbonPrice = 0;
+
+                if (Math.abs(cplex.getDual(carbonConstraint)) > 200) {
+                    carbonPrice = 200;
+                } else {
+                    carbonPrice = Math.abs(cplex.getDual(carbonConstraint));
+                }
+
+                logger.warn("Carbon constraint = " + Math.abs(cplex.getDual(carbonConstraint)));
                 for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
                     YearlySegment ys = reps.marketRepository.findYearlySegmentForElectricitySpotMarketForTime(market);
 
@@ -724,25 +786,21 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                         if (market.isDailyDemandResponseImplemented()) {
                             storeInDatabase(price, gen, dem, elasticDem, charging, discharging, soc,
                                     cplex.getValues(valueOfLostLoadInMWH[ind]), market, ys, getCurrentTick(),
-                                    Math.abs(cplex.getDual(carbonConstraint)), (int) numberOfElectricitySpotMarkets,
-                                    emissions);
+                                    carbonPrice, (int) numberOfElectricitySpotMarkets, emissions);
                         } else {
                             storeInDatabase(price, gen, dem, null, charging, discharging, soc,
                                     cplex.getValues(valueOfLostLoadInMWH[ind]), market, ys, getCurrentTick(),
-                                    Math.abs(cplex.getDual(carbonConstraint)), (int) numberOfElectricitySpotMarkets,
-                                    emissions);
+                                    carbonPrice, (int) numberOfElectricitySpotMarkets, emissions);
                         }
                     } else {
                         if (market.isDailyDemandResponseImplemented()) {
                             storeInDatabase(price, gen, dem, elasticDem, null, null, null,
                                     cplex.getValues(valueOfLostLoadInMWH[ind]), market, ys, getCurrentTick(),
-                                    Math.abs(cplex.getDual(carbonConstraint)), (int) numberOfElectricitySpotMarkets,
-                                    emissions);
+                                    carbonPrice, (int) numberOfElectricitySpotMarkets, emissions);
                         } else {
                             storeInDatabase(price, gen, dem, null, null, null, null,
                                     cplex.getValues(valueOfLostLoadInMWH[ind]), market, ys, getCurrentTick(),
-                                    Math.abs(cplex.getDual(carbonConstraint)), (int) numberOfElectricitySpotMarkets,
-                                    emissions);
+                                    carbonPrice, (int) numberOfElectricitySpotMarkets, emissions);
                         }
                     }
 
@@ -758,8 +816,10 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                 case 1:
                     for (Interconnector interconnector : reps.interconnectorRepository.findAllInterconnectors()) {
 
-                        logger.warn("Storing Flows for: " + interconnector.getName().toString() + "Capacity: "
-                                + interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
+                        // logger.warn("Storing Flows for: " +
+                        // interconnector.getName().toString() + "Capacity: "
+                        // +
+                        // interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
                         storeInDatabase(
                                 reps.interconnectorRepository.findYearlySegmentForInterconnectorForTime(interconnector),
                                 interconnector, getCurrentTick(),
@@ -771,8 +831,10 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                 case 3:
                     int interconnectorIndex = 0;
                     for (Interconnector interconnector : reps.interconnectorRepository.findAllInterconnectors()) {
-                        logger.warn("Storing Flows for: " + interconnector.getName().toString() + "Capacity: "
-                                + interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
+                        // logger.warn("Storing Flows for: " +
+                        // interconnector.getName().toString() + "Capacity: "
+                        // +
+                        // interconnector.getInterconnectorCapacity().getValue(getCurrentTick()));
                         storeInDatabase(
                                 reps.interconnectorRepository.findYearlySegmentForInterconnectorForTime(interconnector),
                                 interconnector, getCurrentTick(),

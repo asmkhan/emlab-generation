@@ -64,8 +64,10 @@ public class ProcessAcceptedPPDPAnnualRole extends AbstractMarketRole<Electricit
 
             double elasticDemandPayment = esm.getDemandShiftCost() * calculateTotalElasticDemand(info);
 
-            logger.warn("Total demand shifted is: " + calculateTotalElasticDemand(info));
-            logger.warn("Total demand shift cost is: " + elasticDemandPayment);
+            // logger.warn("Total demand shifted is: " +
+            // calculateTotalElasticDemand(info));
+            // logger.warn("Total demand shift cost is: " +
+            // elasticDemandPayment);
 
             reps.nonTransactionalCreateRepository.createCashFlow(null, esm, elasticDemandPayment,
                     CashFlow.DEMAND_SHIFTING_PAYMENT, getCurrentTick(), null);

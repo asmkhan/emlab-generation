@@ -147,7 +147,7 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 else
                     avgGrowthFactor += elm.getDemandGrowthTrend().getValue(0);
             }
-            expectedDemand.put(elm, (Math.pow(avgGrowthFactor / iteration, (double) futureTimePoint)));
+            expectedDemand.put(elm, (Math.pow(((avgGrowthFactor / iteration) + 0.04), (double) futureTimePoint)));
         }
 
         ElectricitySpotMarket market = agent.getInvestorMarket();

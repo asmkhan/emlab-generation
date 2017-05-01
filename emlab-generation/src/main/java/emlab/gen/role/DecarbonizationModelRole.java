@@ -423,7 +423,8 @@ public class DecarbonizationModelRole extends AbstractRole<DecarbonizationModel>
         for (ElectricitySpotMarket electricitySpotMarket : reps.marketRepository.findAllElectricitySpotMarkets()) {
 
             //////////////////////////////////////////////////////////////////
-            logger.warn(" 4b. Processing accepted hourly bids using optimization");
+            // logger.warn(" 4b. Processing accepted hourly bids using
+            ////////////////////////////////////////////////////////////////// optimization");
             /// Commented out for annual optimization
             //////////////////////////////////////////////////////////////////
             // processAcceptedPowerPlantDispatchRole.act(electricitySpotMarket);

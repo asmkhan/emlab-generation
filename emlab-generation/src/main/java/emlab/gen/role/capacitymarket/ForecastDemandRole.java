@@ -53,6 +53,7 @@ public class ForecastDemandRole extends AbstractRole<Regulator>implements Role<R
         }
 
         Zone zone = regulator.getZone();
+
         ElectricitySpotMarket market = reps.marketRepository.findElectricitySpotMarketForZone(zone);
 
         // double trend =
@@ -126,13 +127,19 @@ public class ForecastDemandRole extends AbstractRole<Regulator>implements Role<R
             peakExpectedDemand = peakLoadforMarketNOtrend;
 
         } else {
-            double[] demands = reps.yearlySegmentClearingPointMarketInformationRepository
-                    .findMarketInformationForMarketAndTime(getCurrentTick() - 1, market).getMarketDemand();
-                    // DoubleMatrix1D demandArray = new
-                    // DenseDoubleMatrix1D(demands);
-                    // double maxDemand = demandArray.aggregate(Functions.max,
-                    // Functions.identity);
-                    // int maxInd = getMaxIndex(demandArray);
+            // double[] demands1 =
+            // reps.yearlySegmentClearingPointMarketInformationRepository
+            // .findMarketInformationForMarketAndTime(getCurrentTick() - 1,
+            // market).getMarketDemand();
+
+            double[] demands = market.getYearlySegmentLoad().getHourlyInElasticCurrentDemandForYearlySegment()
+                    .getHourlyArray(getCurrentTick());
+
+            // DoubleMatrix1D demandArray = new
+            // DenseDoubleMatrix1D(demands);
+            // double maxDemand = demandArray.aggregate(Functions.max,
+            // Functions.identity);
+            // int maxInd = getMaxIndex(demandArray);
 
             // Arrays.sort(demands);
             double[] maxDemand = getMaxIndex(demands);
@@ -147,6 +154,7 @@ public class ForecastDemandRole extends AbstractRole<Regulator>implements Role<R
             // Arrays.sort(gens);
             // peakGeneration = gens[gens.length - 1];
             double[] maxGen = getMaxIndex(gens);
+
             // peakDemand = demands[demands.length - 1];
             // logger.warn("Max value generation" + maxGen[1]);
             // logger.warn("Max generation hour" + maxGen[0]);
@@ -221,7 +229,6 @@ public class ForecastDemandRole extends AbstractRole<Regulator>implements Role<R
         // demand target would be 83902 * ((1+0.156)-0) = 96990
 
         regulator.setDemandTarget(demandTarget);
-
     }
 
     public double[] getMaxIndex(double[] v) {

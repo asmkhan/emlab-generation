@@ -95,6 +95,9 @@ public class SubmitOffersToElectricitySpotMarketAnnualRole extends AbstractEnerg
 
         boolean producerIsNull = (producer == null) ? true : false;
         // find all my operating power plants
+
+        int plantIndex = 0;
+
         for (PowerPlant plant : powerPlants) {
 
             if (producerIsNull) {
@@ -109,10 +112,10 @@ public class SubmitOffersToElectricitySpotMarketAnnualRole extends AbstractEnerg
             double price;
             if (!forecast) {
                 mc = calculateMarginalCostExclCO2MarketCost(plant, tick);
-                price = mc * producer.getPriceMarkUp();
+                price = mc * producer.getPriceMarkUp() * producer.getRandomNumberSeed().getHourlyArray(0)[plantIndex];
             } else {
                 mc = calculateExpectedMarginalCostExclCO2MarketCost(plant, forecastedFuelPrices, tick);
-                price = mc * producer.getPriceMarkUp();
+                price = mc * producer.getPriceMarkUp() * producer.getRandomNumberSeed().getHourlyArray(0)[plantIndex];
             }
 
             logger.info("Submitting offers for {} with technology {}", plant.getName(),
@@ -141,6 +144,7 @@ public class SubmitOffersToElectricitySpotMarketAnnualRole extends AbstractEnerg
 
             ppdpList.add(ppdpAnnual);
 
+            plantIndex++;
         }
 
         return ppdpList;
