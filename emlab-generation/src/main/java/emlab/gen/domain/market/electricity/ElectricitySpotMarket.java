@@ -86,6 +86,16 @@ public class ElectricitySpotMarket extends DecarbonizationMarket {
 
     private double totalShiftedDemand;
 
+    private double peakLoad;
+
+    public double getPeakLoad() {
+        return peakLoad;
+    }
+
+    public void setPeakLoad(double peakLoad) {
+        this.peakLoad = peakLoad;
+    }
+
     public double getTotalShiftedDemand() {
         return totalShiftedDemand;
     }

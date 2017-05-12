@@ -67,7 +67,7 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
             Government gov = template.findAll(Government.class).iterator().next();
             IloCplex cplex = new IloCplex();
             double co2Cap = gov.getCo2Cap(getCurrentTick());
-            logger.warn("Carbon cap is: " + co2Cap);
+            // logger.warn("Carbon cap is: " + co2Cap);
             List<Zone> zoneList = Utils.asList(reps.template.findAll(Zone.class));
             List<Interconnector> interconnectorList = Utils
                     .asList(reps.interconnectorRepository.findAllInterconnectors());
@@ -654,15 +654,17 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
 
             IloRange carbonConstraint = (IloRange) cplex.addLe(cplex.sum(carbonEmissionsEquationsForAllMarkets),
                     co2Cap);
-            logger.warn("Number of power plants bidding is:" + generationCapacityofPlantsMatrix.length);
+            // logger.warn("Number of power plants bidding is:" +
+            // generationCapacityofPlantsMatrix.length);
             cplex.setParam(IloCplex.IntParam.Simplex.Display, 0);
 
             if (cplex.solve()) {
                 int ppdpIndex = 0;
-                logger.warn("----------------------------------------------------------");
-                logger.warn("Objective = " + cplex.getObjValue());
-                logger.warn("Objective = " + cplex.getStatus());
-                logger.warn("---------------------Market Cleared-----------------------");
+                // logger.warn("----------------------------------------------------------");
+                // logger.warn("Objective = " + cplex.getObjValue());
+                // logger.warn("Objective = " + cplex.getStatus());
+                // logger.warn("---------------------Market
+                // Cleared-----------------------");
 
                 double[] Dual2 = null;
                 double[] Dual3 = null;
@@ -695,8 +697,12 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
                     carbonPrice = Math.abs(cplex.getDual(carbonConstraint));
                 }
 
-                logger.warn("Carbon constraint = " + Math.abs(cplex.getDual(carbonConstraint)));
+                // logger.warn("Carbon constraint = " +
+                // Math.abs(cplex.getDual(carbonConstraint)));
                 for (ElectricitySpotMarket market : reps.marketRepository.findAllElectricitySpotMarkets()) {
+
+                    market.setPeakLoad(maxInelasticDemandInMarkets[ind]);
+
                     YearlySegment ys = reps.marketRepository.findYearlySegmentForElectricitySpotMarketForTime(market);
 
                     // for (int i = 0; i < 20; i++) {
@@ -856,7 +862,7 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
             e.printStackTrace();
         }
 
-        logger.warn("Optimization completed!");
+        // logger.warn("Optimization completed!");
 
         // System.exit(0);
 

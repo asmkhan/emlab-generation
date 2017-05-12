@@ -69,8 +69,9 @@ public class ProcessAcceptedPPDPAnnualRole extends AbstractMarketRole<Electricit
             // logger.warn("Total demand shift cost is: " +
             // elasticDemandPayment);
 
-            reps.nonTransactionalCreateRepository.createCashFlow(null, esm, elasticDemandPayment,
-                    CashFlow.DEMAND_SHIFTING_PAYMENT, getCurrentTick(), null);
+            // reps.nonTransactionalCreateRepository.createCashFlow(null, esm,
+            // elasticDemandPayment,
+            // CashFlow.DEMAND_SHIFTING_PAYMENT, getCurrentTick(), null);
         }
     }
 

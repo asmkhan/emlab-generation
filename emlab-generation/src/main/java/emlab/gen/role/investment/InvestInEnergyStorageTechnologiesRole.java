@@ -57,7 +57,7 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
 
         double storageRevenue = reps.cashFlowRepository.findAllStorageRevenuesForTime(agent, getCurrentTick());
 
-        logger.warn("Revenues: " + storageRevenue);
+        // logger.warn("Revenues: " + storageRevenue);
 
         // CashFlow omCosts =
         // reps.cashFlowRepository.findAllCashFlowsForStorageOMCostsForTime(agent,
@@ -73,7 +73,7 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
 
         double totalStorageCosts = OMAndInvCosts + IncInvCosts;
 
-        logger.warn("Costs: " + totalStorageCosts);
+        // logger.warn("Costs: " + totalStorageCosts);
 
         // if ((revenue != null) || (revenueCM != null)) {
         // if ((revenue.getMoney() + revenueCM.getMoney()) > 1.2 *
@@ -89,7 +89,8 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
 
         if (storageRevenue - totalStorageCosts > 0) {
 
-            logger.warn("Revenue greater than costs - Investment in Storage");
+            // logger.warn("Revenue greater than costs - Investment in
+            // Storage");
 
             double storageExpansionRate = ((storageRevenue - totalStorageCosts) / totalStorageCosts)
                     / storageTech.getStorageInvestmentCalibrator();
@@ -138,8 +139,10 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
             storageTech
                     .setFinalStateOfChargeInStorage(storageTech.getFinalStateOfChargeInStorage() * (1 + expansionRate));
 
-            logger.warn("The amount paid for investment is {}", incrementalCapitalCost);
-            logger.warn("The new current maximum storage capacity is {}", storageTech.getCurrentMaxStorageCapacity());
+            // logger.warn("The amount paid for investment is {}",
+            // incrementalCapitalCost);
+            // logger.warn("The new current maximum storage capacity is {}",
+            // storageTech.getCurrentMaxStorageCapacity());
 
             // } else if ((revenue.getMoney() + revenueCM.getMoney()) -
             // omCosts.getMoney() > 0) {
@@ -195,11 +198,13 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
 
             if ((peakGeneration * 0.04) > storageTech.getCurrentMaxStorageCapacity()) {
 
-                logger.warn("Storage cant be decreased beyond 4% of peak load");
+                // logger.warn("Storage cant be decreased beyond 4% of peak
+                // load");
 
             } else {
 
-                logger.warn("Storage is making a loss so the capacity has to be decreased!");
+                // logger.warn("Storage is making a loss so the capacity has to
+                // be decreased!");
 
                 double storageReductionRate = ((totalStorageCosts - storageRevenue) / totalStorageCosts)
                         / storageTech.getStorageInvestmentCalibrator();
@@ -223,13 +228,13 @@ public class InvestInEnergyStorageTechnologiesRole extends AbstractEnergyProduce
                 storageTech.setFinalStateOfChargeInStorage(
                         storageTech.getFinalStateOfChargeInStorage() * (1 - reductionRate));
 
-                logger.warn("The new current maximum storage capacity is {}",
-                        storageTech.getCurrentMaxStorageCapacity());
+                // logger.warn("The new current maximum storage capacity is {}",
+                // storageTech.getCurrentMaxStorageCapacity());
             }
 
         } else {
 
-            logger.warn("No change in storage capacity!");
+            // logger.warn("No change in storage capacity!");
 
         }
         // } else

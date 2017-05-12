@@ -54,7 +54,7 @@ public class PayStorageUnitAnnualRole extends AbstractEnergyProducerRole impleme
     @Transactional
     public void act(EnergyProducer producer) {
 
-        logger.info("Making the payments for storage");
+        // logger.info("Making the payments for storage");
 
         ElectricitySpotMarket operatingMarket = producer.getInvestorMarket();
 
@@ -79,10 +79,10 @@ public class PayStorageUnitAnnualRole extends AbstractEnergyProducerRole impleme
             CashFlow cf = reps.nonTransactionalCreateRepository.createCashFlowStorage(operatingMarket, producer, money,
                     CashFlow.STORAGE, getCurrentTick(), storageTech);
 
-            logger.info("Cash flow created for storage: {}", cf);
+            // logger.info("Cash flow created for storage: {}", cf);
         }
 
-        logger.warn("money={}", money);
+        // logger.warn("money={}", money);
 
         // Calculating the total charging and discharging cycles
 
@@ -119,8 +119,8 @@ public class PayStorageUnitAnnualRole extends AbstractEnergyProducerRole impleme
         CashFlow cf_om = reps.nonTransactionalCreateRepository.createCashFlowStorage(producer, maintainer, omCost,
                 CashFlow.STORAGE_OM, getCurrentTick(), storageTech);
 
-        logger.info("Cash flow created for storage O&M cost: {}", cf_om);
-        logger.warn("O&M cost={}", omCost);
+        // logger.info("Cash flow created for storage O&M cost: {}", cf_om);
+        // logger.warn("O&M cost={}", omCost);
 
         if (getCurrentTick() == 0) {
 
@@ -155,10 +155,12 @@ public class PayStorageUnitAnnualRole extends AbstractEnergyProducerRole impleme
 
                 loan.setNumberOfPaymentsDone(loan.getNumberOfPaymentsDone() + 1);
 
-                logger.info("Paying {} (euro) for storage loan {}", payment, loan);
+                // logger.info("Paying {} (euro) for storage loan {}", payment,
+                // loan);
 
-                logger.info("Number of payments done for storage {}, total needed: {}", loan.getNumberOfPaymentsDone(),
-                        loan.getTotalNumberOfPayments());
+                // logger.info("Number of payments done for storage {}, total
+                // needed: {}", loan.getNumberOfPaymentsDone(),
+                // loan.getTotalNumberOfPayments());
             }
         }
     }

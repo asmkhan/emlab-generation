@@ -94,7 +94,8 @@ public class PayToStakeholderRole extends AbstractRole<EnergyProducer>implements
                     stakeholder, amountOfDividentsPayableToStakeholder, CashFlow.STAKEHOLDER_DIVIDEND, getCurrentTick(),
                     null);
 
-            logger.warn("Payment of: " + cf_ToStakeholder.getMoney() + " for " + stakeholder);
+            // logger.warn("Payment of: " + cf_ToStakeholder.getMoney() + " for
+            // " + stakeholder);
         }
 
     }

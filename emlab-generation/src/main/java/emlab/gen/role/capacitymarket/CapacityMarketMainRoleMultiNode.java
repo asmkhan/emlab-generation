@@ -65,7 +65,7 @@ public class CapacityMarketMainRoleMultiNode extends AbstractRole<CapacityMarket
 
         forecastDemandRole.act(regulator);
 
-        logger.warn("Forecast demand role run");
+        // logger.warn("Forecast demand role run");
 
         // Energy producers submit Bids to Capacity market
 
@@ -94,19 +94,21 @@ public class CapacityMarketMainRoleMultiNode extends AbstractRole<CapacityMarket
             }
         }
 
-        logger.warn("******************capacity bids submitted****************************");
+        // logger.warn("******************capacity bids
+        // submitted****************************");
 
         // Clear capacity market
 
         clearCapacityMarketNewRoleMultiNode.act(regulator);
 
-        logger.warn("************************Capacity Market cleared******************************");
+        // logger.warn("************************Capacity Market
+        // cleared******************************");
 
         // ensure cash flows
         paymentFromConsumerToProducerforCapacityRole.act(market);
 
-        logger.warn("capacity payments made");
-        logger.warn("Capacity Market Main Role Completed  once");
+        // logger.warn("capacity payments made");
+        // logger.warn("Capacity Market Main Role Completed once");
 
     }
 

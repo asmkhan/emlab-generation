@@ -227,8 +227,9 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
 
                 if (plant.getActualLifetime() > (prolongYearsOfDismantlng)) {
 
-                    logger.warn(" **********************  OLD PLANT DISMANTLED: " + plant.getName() + " Age "
-                            + plant.getActualLifetime());
+                    // logger.warn(" ********************** OLD PLANT
+                    // DISMANTLED: " + plant.getName() + " Age "
+                    // + plant.getActualLifetime());
                     plant.dismantlePowerPlant(getCurrentTick());
 
                 }
@@ -616,7 +617,7 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
 
                     if (loan != null) {
 
-                        logger.info("Found a loan: {}", loan);
+                        // logger.info("Found a loan: {}", loan);
                         if (loan.getNumberOfPaymentsDone() < loan.getTotalNumberOfPayments()) {
 
                             double payment = loan.getAmountPerPayment()
@@ -635,7 +636,7 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                     }
                     Loan downpayment = plant.getDownpayment();
                     if (downpayment != null) {
-                        logger.info("Found downpayment");
+                        // logger.info("Found downpayment");
                         if (downpayment.getNumberOfPaymentsDone() < downpayment.getTotalNumberOfPayments()) {
 
                             double payment = downpayment.getAmountPerPayment()
@@ -661,8 +662,9 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                             && !plant.getOwner().isSimpleCapacityMarketEnabled()) {
 
                     } else {
-                        logger.warn(" **********************  ENERGY PRODUCER DISMANTLED: " + plant.getName() + " Age "
-                                + plant.getActualLifetime());
+                        // logger.warn(" ********************** ENERGY PRODUCER
+                        // DISMANTLED: " + plant.getName() + " Age "
+                        // + plant.getActualLifetime());
                         plant.dismantlePowerPlant(getCurrentTick());
                     }
                 }

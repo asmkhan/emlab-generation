@@ -31,19 +31,33 @@
 
 	<!-- Demand Growth Trend -->
 
+<!-- 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-#demandGrowthTrendNL" /> -->
+	
+	<!-- Fuel Prices -->
+	
+<!-- 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-#coalPrice" /> -->
+<!-- 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-#gasPrice" /> -->
+<!-- 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-#biomassPrice" /> -->
+<!-- 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-#uraniumPrice" /> -->
+		
 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-36" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-1" />
 	
 	<!-- Fuel Prices -->
 	
 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-1" />
 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-1" />
 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-1" />
 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-1" />
 
 	<!-- Substances -->
 	
@@ -174,7 +188,7 @@
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
 		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
-		p:storageImplemented="true" p:demandShiftCost="850" >
+		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />
 		<property name="zone" ref="nl" />
@@ -814,7 +828,7 @@
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.40"
-		p:peakSegmentDependentAvailability="0.13" 
+		p:peakSegmentDependentAvailability="0.24" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>
@@ -839,7 +853,7 @@
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.60"
-		p:peakSegmentDependentAvailability="0.13" 
+		p:peakSegmentDependentAvailability="0.32" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>
@@ -863,8 +877,8 @@
 		p:expectedLeadtime="1" p:expectedPermittime="0" p:minimumFuelQuality="1"
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
-		p:baseSegmentDependentAvailability="0.45"
-		p:peakSegmentDependentAvailability="0.38" 
+		p:baseSegmentDependentAvailability="0.20"
+		p:peakSegmentDependentAvailability="0.08" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>

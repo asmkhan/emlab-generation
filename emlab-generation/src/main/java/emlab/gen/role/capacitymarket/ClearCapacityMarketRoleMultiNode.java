@@ -91,11 +91,15 @@ public class ClearCapacityMarketRoleMultiNode extends AbstractRole<Regulator>imp
             totalVolumeBid = totalVolumeBid + currentCDP.getAmount();
         }
 
-        logger.warn("2 TotVolumeBidded " + totalVolumeBid + " TotVolAvailable "
-                + reps.powerPlantRepository.calculatePeakCapacityOfNonIntermittentOperationalPowerPlantsInMarket(
-                        reps.marketRepository.findElectricitySpotMarketForZone(regulator.getZone()), getCurrentTick())
-                + " LowerMarginDemand " + (demandTarget * (lowerMargin)) + " UpperMarginDemand "
-                + (demandTarget * (upperMargin)));
+        // logger.warn("2 TotVolumeBidded " + totalVolumeBid + " TotVolAvailable
+        // "
+        // +
+        // reps.powerPlantRepository.calculatePeakCapacityOfNonIntermittentOperationalPowerPlantsInMarket(
+        // reps.marketRepository.findElectricitySpotMarketForZone(regulator.getZone()),
+        // getCurrentTick())
+        // + " LowerMarginDemand " + (demandTarget * (lowerMargin)) + "
+        // UpperMarginDemand "
+        // + (demandTarget * (upperMargin)));
 
         if (totalVolumeBid <= (demandTarget * (lowerMargin)) && isTheMarketCleared == false) {
 
@@ -330,7 +334,8 @@ public class ClearCapacityMarketRoleMultiNode extends AbstractRole<Regulator>imp
             // clearingPoint.getVolume());
             // logger.warn("MARKET CLEARED at time" + clearingPoint.getTime());
 
-            logger.warn("Clearing point Volume {} and Price {}", clearingPoint.getVolume(), clearingPoint.getPrice());
+            // logger.warn("Clearing point Volume {} and Price {}",
+            // clearingPoint.getVolume(), clearingPoint.getPrice());
 
             // try {
             // Thread.sleep(10000);

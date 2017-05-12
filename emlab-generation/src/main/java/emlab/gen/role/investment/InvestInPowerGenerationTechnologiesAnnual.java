@@ -105,6 +105,7 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
     public void act(T agent) {
 
         long futureTimePoint = getCurrentTick() + agent.getInvestmentFutureTimeHorizon();
+
         // logger.warn(agent + " is looking at timepoint " + futureTimePoint);
 
         // ==== Expectations ===
@@ -125,6 +126,7 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
         // logger.warn("{} used to expect CO2 prices {}", agent.getName(),
         // expectedCO2PriceOld);
 
+        long futureTimePoint1 = agent.getInvestmentFutureTimeHorizon() * 2;
         // logger.warn(expectedCO2Price.toString());
 
         // Demand
@@ -147,7 +149,13 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 else
                     avgGrowthFactor += elm.getDemandGrowthTrend().getValue(0);
             }
-            expectedDemand.put(elm, (Math.pow(((avgGrowthFactor / iteration) + 0.04), (double) futureTimePoint)));
+            expectedDemand.put(elm, (Math.pow(((avgGrowthFactor / iteration) + 0.04), (double) futureTimePoint1)));
+            // logger.warn("avgGrowthFactor: " + avgGrowthFactor);
+            // logger.warn("iteration: " + iteration);
+            // logger.warn("futureTimePoint: " + futureTimePoint);
+            // logger.warn(
+            // "Growth rate: " + (Math.pow(((avgGrowthFactor / iteration) +
+            // 0.04), (double) futureTimePoint1)));
         }
 
         ElectricitySpotMarket market = agent.getInvestorMarket();
@@ -223,6 +231,10 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 double capacityInPipelineInMarket = reps.powerPlantRepository
                         .calculateCapacityOfPowerPlantsByMarketInPipeline(market, getCurrentTick());
 
+                // double expectedFutureCapacity = reps.powerPlantRepository
+                // .calculateCapacityOfExpectedOperationalPowerPlantsInMarket(market,
+                // futureTimePoint);
+
                 if ((expectedInstalledCapacityOfTechnology + plant.getActualNominalCapacity())
                         / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
 
@@ -244,6 +256,18 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
                     // logger.warn("Not investing because more than 20% of
                     // demand in pipeline.");
+
+                    // } else if (expectedFutureCapacity > (1.3 *
+                    // marketInformation.maxExpectedLoad)) {
+                    // logger.warn("Not investing because more than 30% of
+                    // demand in pipeline.");
+                    // logger.warn("Not investing because more than 30% of
+                    // demand in pipeline.");
+                    // logger.warn("expectedFutureCapacity: " +
+                    // expectedFutureCapacity);
+                    // logger.warn(
+                    // "(1.3 * marketInformation.maxExpectedLoad): " + (1.3 *
+                    // marketInformation.maxExpectedLoad));
 
                 } else if ((capacityOfTechnologyInPipeline > 2.0 * operationalCapacityOfTechnology)
                         && capacityOfTechnologyInPipeline > 9000) { // TODO:
@@ -593,8 +617,9 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
         }
 
         if (bestTechnology != null) {
-            logger.warn("************************ EP Agent {} invested in technology {} at tick " + getCurrentTick(),
-                    agent, bestTechnology);
+            // logger.warn("************************ EP Agent {} invested in
+            // technology {} at tick " + getCurrentTick(),
+            // agent, bestTechnology);
 
             PowerPlant plant = new PowerPlant();
             plant.specifyAndPersist(getCurrentTick(), agent, bestNode, bestTechnology);
@@ -843,6 +868,10 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
             long numberOfSegments = reps.segmentRepository.count();
 
             double demandFactor = expectedDemand.get(market).doubleValue();
+            // double demandFactor = 0;
+            // if (expectedDemand.get(market).doubleValue() > 1.3) {
+            // demandFactor = 1.2;
+            // }
             // logger.warn("Demand factor:" + demandFactor);
 
             // find expected prices per segment given merit order
@@ -852,9 +881,12 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                     expectedSegmentLoad = segmentLoad.getResidualGLDC() * demandFactor;
                 else
                     expectedSegmentLoad = segmentLoad.getGenerationLDC() * demandFactor;
-
+                // logger.warn("segmentLoad.getGenerationLDC(): " +
+                // segmentLoad.getGenerationLDC());
                 if (expectedSegmentLoad > maxExpectedLoad) {
                     maxExpectedLoad = expectedSegmentLoad;
+                    // logger.warn("maxExpectedLoad: " + maxExpectedLoad);
+                    // logger.warn("maxExpectedLoad: " + demandFactor);
                 }
 
                 double segmentSupply = 0d;

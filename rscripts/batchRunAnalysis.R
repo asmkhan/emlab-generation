@@ -6,15 +6,15 @@ library(ggthemes)
 source("AgentSpringHeadlessReader.R")
 source("TimeSeriesSummariser.R")
 
-technologyPalette=c("CoalPSC" = "black", "Biomass" = "darkgreen", "Biogas"="darkolivegreen3", "Nuclear" = "purple", "Lignite" = "saddlebrown",
-                    "OCGT" = "darkred", "CCGT" = "blue", "PV" = "yellow", "Wind" = "chartreuse4",
-                    "CoalPscCCS" = "darkgray", "IGCC" = "orange", "IgccCCS"="orangered", "CcgtCCS" = "red",
-                    "WindOffshore" = "navyblue", "HydroPower" = "skyblue3")
+technologyPalette=c("CoalPSC" = "black", "Biomass" = "darkgreen", "Nuclear" = "purple",
+                    "CCGT" = "blue", "Photovoltaic" = "yellow", "Wind" = "chartreuse4",
+                    "CoalPscCCS" = "darkgray", "CcgtCCS" = "red",
+                    "WindOffshore" = "navyblue", "Hydro" = "skyblue3")
 
-technologyOrder=c("Nuclear","Lignite","CoalPSC","CoalPscCCS","IGCC","IgccCCS","CCGT","CcgtCCS","OCGT","HydroPower","Biomass","Biogas",
-                  "Wind","WindOffshore","PV")
+technologyOrder=c("CoalPscCCS","CcgtCCS","CoalPSC","CCGT","Nuclear","Biomass",
+                  "Wind","WindOffshore","Photovoltaic","Hydro")
 
-renamerList=list(list("CoalPscCSS","CoalPscCCS"),list("Photovoltaic","PV"))
+renamerList=list(list("CoalPscCSS","CoalPscCCS"),list("Photovoltaic","Photovoltaic"))
 
 
 # Generic Data Preparation -------------------------------------------------
@@ -76,6 +76,8 @@ diffExpenditures2<-function(df, list, zeroValue){
 }
 
 functionOfVariablePerRunId<-function(df,FUN,variableName) FUN(df[,variableName])
+
+functionOfVariablePerRunIdAverage<-function(df,FUN,variableName) FUN(df[,variableName])/40
 
 functionOfVariablePerRunIdSpecificPerkWh<-function(df,FUN,variableName){FUN(df[,variableName])/(sum(df[,"Total_DemandinMWh_Country.B"])+sum(df[,"Total_DemandinMWh_Country.A"]))}
 
@@ -141,12 +143,11 @@ plotStackedDiagram <- function(moltenVariable, ylabel, legendName, absolute=TRUE
 }
 
 
-plotTimeSeriesWithConfidenceIntervalByFacettedGroup <- function(df, variable, ylabel, fun.data="median_hilow", conf.int=0.5, conf.int2=0.90, nrow=NULL){
-  g<-ggplot(df, aes_string(x="tick", y=variable))+ #colour=modelRun, fill=modelRun,
-    #stat_summary(aes_string(fill="modelRun"), fun.data=fun.data, conf.int=conf.int, geom="smooth") +
-    stat_summary(fun.data=fun.data, conf.int=conf.int, geom="smooth", colour="black") +
-    stat_summary(fun.data=fun.data, conf.int=conf.int2, geom="smooth", colour="black")+
-    stat_summary(fun.y="mean", conf.int=.95, geom="smooth", lty="dashed", colour="black") +
+plotTimeSeriesWithConfidenceIntervalByFacettedGroup <- function(df, variable, ylabel, fun.data="median_hilow", conf.int=0.5,conf.int2=0.90,nrow=NULL){
+  g<-ggplot(df, aes_string(x="tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
+    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
     
     #facet_grid(. ~ modelRun)+
     facet_wrap(~ modelRun, nrow=nrow)+
@@ -156,6 +157,33 @@ plotTimeSeriesWithConfidenceIntervalByFacettedGroup <- function(df, variable, yl
     scale_linetype_manual(breaks=c("a","b"))
 }
 
+plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun <- function(df, variable, ylabel, fun.data="median_hilow", conf.int=0.5,conf.int2=0.90,nrow=NULL){
+  g<-ggplot(df, aes_string(x="tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
+    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
+    
+    #facet_grid(. ~ modelRun)+
+    facet_wrap(~ modelRun, nrow=nrow)+
+    theme(legend.position="none")+
+    xlab("Time [a]")+
+    ylab(ylabel)+
+    scale_linetype_manual(breaks=c("a","b"))
+}
+
+plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRunTick <- function(df, variable, ylabel, fun.data="median_hilow", conf.int=0.5,conf.int2=0.90,nrow=NULL){
+  g<-ggplot(df, aes_string(x="Tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
+    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
+    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
+    
+    #facet_grid(. ~ modelRun)+
+    facet_wrap(~ modelRun, nrow=nrow)+
+    theme(legend.position="none")+
+    xlab("Time [a]")+
+    ylab(ylabel)+
+    scale_linetype_manual(breaks=c("a","b"))
+}
 
 plotTimeSeriesWithOnly50PerConfidenceIntervalByFacettedGroup <- function(df, variable, ylabel, nrow=NULL){
   g<-ggplot(df, aes_string(x="tick", y=variable))+ #colour=run, fill=run,
@@ -285,3 +313,4 @@ theme_publication<-function(base_size=11, base_family="serif", ticks=TRUE){
     )
   ret
 }
+

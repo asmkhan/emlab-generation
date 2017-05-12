@@ -382,7 +382,7 @@ public class DecarbonizationModelRole extends AbstractRole<DecarbonizationModel>
         timerMarket.reset();
         timerMarket.start();
 
-        logger.warn(" 3c. Clearing Hourly electricity spot and CO2 markets using CPLEX optimization role");
+        logger.warn(" 3c. Clearing Hourly electricity spot and CO2 markets using optimization role");
         clearHourlyElectricityMarketRole.act(model);
 
         // clearHourlyElectricityMarketRole.populate_plantValue(pl);
@@ -420,6 +420,7 @@ public class DecarbonizationModelRole extends AbstractRole<DecarbonizationModel>
             receiveLongTermContractPowerRevenuesRole.act(producer);
             // producer.act(receiveLongTermContractPowerRevenuesRole);
         }
+        logger.warn(" 4b. Processing accepted hourly bids");
         for (ElectricitySpotMarket electricitySpotMarket : reps.marketRepository.findAllElectricitySpotMarkets()) {
 
             //////////////////////////////////////////////////////////////////
@@ -440,7 +441,7 @@ public class DecarbonizationModelRole extends AbstractRole<DecarbonizationModel>
 
         // logger.warn(" 4. Processing Strategic Reserve Payment ");
         timerMarket.stop();
-        logger.warn("        processing bids and creating LDC took: {} seconds.", timerMarket.seconds());
+        logger.warn("        took: {} seconds.", timerMarket.seconds());
         /*
          * Maintenance and CO2
          */

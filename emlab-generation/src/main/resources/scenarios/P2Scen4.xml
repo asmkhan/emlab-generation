@@ -32,7 +32,7 @@
 		p:name="Decarbonization Model" p:simulationLength="40"
 		p:co2TradingImplemented="false" p:realRenewableDataImplemented="true"
 		p:iterationSpeedFactor="3" p:iterationSpeedCriterion="0.005" p:longTermContractsImplemented="false"
-		p:capDeviationCriterion="0.03" p:simpleCapacityMarketEnabled="false"
+		p:capDeviationCriterion="0.03" p:simpleCapacityMarketEnabled="true"
 		p:deletionOldPPDPBidsAndCashFlowsEnabled="false" p:deletionAge="5"
 		p:noPrivateIntermittentRESInvestment="false">
 	</bean>
@@ -40,24 +40,24 @@
 	<!-- Demand Growth Trend -->
 
 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-36" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-1" />
 		
 	<bean id="demandGrowthTrendFBL" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendFBL-36" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendFBL-1" />
 		
 	<bean id="demandGrowthTrendDE" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendDE-36" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendDE-1" />
 	
 	<!-- Fuel Prices -->
 	
 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-1" />
 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-1" />
 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-1" />
 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-36" />
+		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-1" />
 
 	<!-- Substances -->
 	
@@ -348,7 +348,7 @@
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
 		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
-		p:storageImplemented="true" p:demandShiftCost="850">
+		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />
 		<property name="zone" ref="nl" />
@@ -447,7 +447,7 @@
 	<bean id="frbeluxElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country B electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
 		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
-		p:storageImplemented="true" p:demandShiftCost="850">
+		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendFBL" />
 		<property name="zone" ref="fbl" />
@@ -546,7 +546,7 @@
 	<bean id="germanElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country C electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
 		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
-		p:storageImplemented="true" p:demandShiftCost="850">
+		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendDE" />
 		<property name="zone" ref="de" />
@@ -776,7 +776,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -790,7 +790,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -804,7 +804,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -818,7 +818,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -832,7 +832,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -846,7 +846,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -860,7 +860,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -874,7 +874,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -888,7 +888,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -902,7 +902,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -916,7 +916,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -930,7 +930,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -944,7 +944,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -958,7 +958,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -972,7 +972,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="true"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.12" p:loanInterestRate="0.09"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="true" p:priceMarkUp="1" 
@@ -986,7 +986,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="false"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.1" p:loanInterestRate="0.07"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="false" p:priceMarkUp="1" 
@@ -998,7 +998,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="false"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.1" p:loanInterestRate="0.07"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="false" p:priceMarkUp="1" 
@@ -1010,7 +1010,7 @@
 		p:investmentRole-ref="standardInvestmentRole" p:investmentRequired="false"
 		p:investmentFutureTimeHorizon="7" p:pastTimeHorizon="5"
 		p:equityInterestRate="0.1" p:loanInterestRate="0.07"
-		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="false"
+		p:debtRatioOfInvestments="0.7" p:simpleCapacityMarketEnabled="true"
 		p:dismantlingProlongingYearsAfterTechnicalLifetime="0"
 		p:dismantlingRequiredOperatingProfit="0" p:downpaymentFractionOfCash="0.5"
 		p:willingToInvest="false" p:priceMarkUp="1" 
@@ -1146,6 +1146,60 @@
 		<property name="fixedOperationAndMaintainanceCostTimeSeriesForStoragePerMWh" ref="operationsCostsforStoragePerMWH" />
 		<property name="efficiencyInFlowTimeSeries" ref="inflowEfficiency" />
 		<property name="efficiencyOutFlowTimeSeries" ref="outflowEfficiency" />
+	</bean>
+	
+	<!-- 	Capacity Market for NL -->
+	
+	<bean id="regulatorA" class="emlab.gen.domain.agent.Regulator"
+		p:name="Regulator A" p:capacityMarketPriceCap="60000"
+		p:reserveMargin="0.08" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
+		p:reserveDemandLowerMargin="0.025" p:reserveDemandUpperMargin="0.025"
+		p:numberOfYearsLookingBackToForecastDemand="4"> 
+		<property name="zone" ref="nl" />
+	</bean>
+		
+	<bean id="capacityMarketA" class="emlab.gen.domain.market.capacity.CapacityMarket"
+		p:name="Capacity Market A" p:storageBiddingAllowed="true" p:renewableTargetInvestorCanInvest="true"
+		p:baseCapacityMarketDemand="17730">
+		<property name="regulator" ref="regulatorA"/>
+		<property name="consumer" ref="energyConsumer"/>
+		<property name="zone" ref="nl" />
+	</bean>
+	
+	<!-- 	Capacity Market for FBL -->
+	
+	<bean id="regulatorB" class="emlab.gen.domain.agent.Regulator"
+		p:name="Regulator B" p:capacityMarketPriceCap="60000"
+		p:reserveMargin="0.08" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
+		p:reserveDemandLowerMargin="0.025" p:reserveDemandUpperMargin="0.025"
+		p:numberOfYearsLookingBackToForecastDemand="4"> 
+		<property name="zone" ref="fbl" />
+	</bean>
+		
+	<bean id="capacityMarketB" class="emlab.gen.domain.market.capacity.CapacityMarket"
+		p:name="Capacity Market B" p:storageBiddingAllowed="true" p:renewableTargetInvestorCanInvest="true"
+		p:baseCapacityMarketDemand="95840">
+		<property name="regulator" ref="regulatorB"/>
+		<property name="consumer" ref="energyConsumer"/>
+		<property name="zone" ref="fbl" />
+	</bean>
+	
+	<!-- 	Capacity Market for DE -->
+	
+	<bean id="regulatorC" class="emlab.gen.domain.agent.Regulator"
+		p:name="Regulator C" p:capacityMarketPriceCap="60000"
+		p:reserveMargin="0.08" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
+		p:reserveDemandLowerMargin="0.025" p:reserveDemandUpperMargin="0.025"
+		p:numberOfYearsLookingBackToForecastDemand="4"> 
+		<property name="zone" ref="de" />
+	</bean>
+		
+	<bean id="capacityMarketC" class="emlab.gen.domain.market.capacity.CapacityMarket"
+		p:name="Capacity Market C" p:storageBiddingAllowed="true" p:renewableTargetInvestorCanInvest="true"
+		p:baseCapacityMarketDemand="68591">
+		<property name="regulator" ref="regulatorC"/>
+		<property name="consumer" ref="energyConsumer"/>
+		<property name="zone" ref="de" />
 	</bean>
 
 	<!-- Renewable Targets NL -->
@@ -1592,7 +1646,7 @@
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.40"
-		p:peakSegmentDependentAvailability="0.13" 
+		p:peakSegmentDependentAvailability="0.24" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>
@@ -1617,7 +1671,7 @@
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
 		p:baseSegmentDependentAvailability="0.60"
-		p:peakSegmentDependentAvailability="0.13" 
+		p:peakSegmentDependentAvailability="0.32" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>
@@ -1641,8 +1695,8 @@
 		p:expectedLeadtime="1" p:expectedPermittime="0" p:minimumFuelQuality="1"
 		p:maximumInstalledCapacityFractionInCountry="1"
 		p:maximumInstalledCapacityFractionPerAgent="1"
-		p:baseSegmentDependentAvailability="0.45"
-		p:peakSegmentDependentAvailability="0.38" 
+		p:baseSegmentDependentAvailability="0.20"
+		p:peakSegmentDependentAvailability="0.08" 
 		p:intermittent="true"
 		p:applicableForLongTermContract="true">
 	</bean>
