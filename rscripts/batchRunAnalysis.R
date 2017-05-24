@@ -11,10 +11,10 @@ technologyPalette=c("CoalPSC" = "black", "Biomass" = "darkgreen", "Nuclear" = "p
                     "CoalPscCCS" = "darkgray", "CcgtCCS" = "red",
                     "WindOffshore" = "navyblue", "Hydro" = "skyblue3")
 
-technologyOrder=c("CoalPscCCS","CcgtCCS","CoalPSC","CCGT","Nuclear","Biomass",
+technologyOrder=c("CoalPscCCS","CcgtCCS","CCGT","CoalPSC","Nuclear","Biomass",
                   "Wind","WindOffshore","Photovoltaic","Hydro")
 
-renamerList=list(list("CoalPscCSS","CoalPscCCS"),list("Photovoltaic","Photovoltaic"))
+renamerList=list(list("CoalPscCSS","CoalPscCCS"),list("Photovoltaic","PV"))
 
 
 # Generic Data Preparation -------------------------------------------------
@@ -102,6 +102,18 @@ addSupplyRatios <- function(df){
   return(df)
 }
 
+addSupplyRatiosNew <- function(df){
+  operationalCapacityVariables=names(df)[grepl("TotalOperationalCapacityPerZoneInMW_", names(df))]
+  countries=strsplit(operationalCapacityVariables,"_")
+  for(i in seq(1:length(countries))){
+    supplyRatio <- df[[paste("TotalOperationalCapacityPerZoneInMW_",countries[[i]][2], sep="")]] / df[[paste("SpotMarketPeakLoad_",countries[[i]][2],".electricity.spot.market", sep="")]]
+    oldNames<-names(df)
+    df<-cbind(df, supplyRatio)
+    names(df)<-c(oldNames,paste("SupplyRatio_",countries[[i]][2], sep=""))
+  }
+  return(df)
+}
+
 addProducerCashBalanceForAll <- function(df){
   energyProducers=names(df)[grepl("ProducerCash_Energy.", names(df))]
   producerCash<-0
@@ -147,7 +159,7 @@ plotTimeSeriesWithConfidenceIntervalByFacettedGroup <- function(df, variable, yl
   g<-ggplot(df, aes_string(x="tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
     stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
     stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
-    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
+    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="line", linetype=1) +
     
     #facet_grid(. ~ modelRun)+
     facet_wrap(~ modelRun, nrow=nrow)+
@@ -161,7 +173,7 @@ plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun <- function(d
   g<-ggplot(df, aes_string(x="tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
     stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
     stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
-    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
+    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="line", lty="solid", colour="black") +
     
     #facet_grid(. ~ modelRun)+
     facet_wrap(~ modelRun, nrow=nrow)+
@@ -171,18 +183,11 @@ plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun <- function(d
     scale_linetype_manual(breaks=c("a","b"))
 }
 
-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRunTick <- function(df, variable, ylabel, fun.data="median_hilow", conf.int=0.5,conf.int2=0.90,nrow=NULL){
-  g<-ggplot(df, aes_string(x="Tick", y=variable),geom_line(size=0.5))+ #colour=modelRun, fill=modelRun,
-    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int), geom="smooth", colour="black") +
-    stat_summary(fun.data=fun.data, fun.args=(conf.int=conf.int2), geom="smooth", colour="black")+
-    stat_summary(fun.y="mean", fun.args=(conf.int=.95), geom="smooth", lty="solid", colour="black") +
-    
-    #facet_grid(. ~ modelRun)+
-    facet_wrap(~ modelRun, nrow=nrow)+
-    theme(legend.position="none")+
-    xlab("Time [a]")+
-    ylab(ylabel)+
-    scale_linetype_manual(breaks=c("a","b"))
+plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun3Countries<-function(dfA,dfB,dfC,variableA,variableB,variableC,ylabel){
+  plotA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(dfA,variableA,ylabel)
+  plotB<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(dfB,variableB,ylabel)
+  plotC<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(dfC,variableC,ylabel)
+  g<-grid.arrange(plotA+ggtitle("Country A")+theme(plot.title = element_text(lineheight=.8, face="bold")), plotB+ggtitle("Country B")+theme(plot.title = element_text(lineheight=.8, face="bold")),plotC+ggtitle("Country C")+theme(plot.title = element_text(lineheight=.8, face="bold")),ncol=3)
 }
 
 plotTimeSeriesWithOnly50PerConfidenceIntervalByFacettedGroup <- function(df, variable, ylabel, nrow=NULL){
@@ -211,14 +216,14 @@ plotTimeSeriesWithConfidenceIntervalGroupedInOnePlot <- function(df, variable, y
 
 plotSpaghettiTimeSeries <- function(df, variable, ylabel, xlabel="Time [a]", ylim=NULL, basesize=8, nrow=NULL){
   p<- ggplot(df, aes_string(x="tick", y=variable))+
-      geom_line(aes_string(group="runId", linestyle="runId"), alpha=I(0.2))+
-      stat_summary(aes_string(fill="modelRun"), fun.data="median_hilow", conf.int=.5, geom="smooth") +
-      #stat_summary(fun.data="median_hilow", conf.int=.9, geom="smooth")+
-      facet_wrap( ~ modelRun, nrow=nrow)+
-      ylab(ylabel)+
-      xlab(xlabel)+
-      theme_grey(base_size=basesize)+
-      theme(legend.position="none")
+    geom_line(aes_string(group="runId", linestyle="runId"), alpha=I(0.2))+
+    stat_summary(aes_string(fill="modelRun"), fun.data="median_hilow", conf.int=.5, geom="smooth") +
+    #stat_summary(fun.data="median_hilow", conf.int=.9, geom="smooth")+
+    facet_wrap( ~ modelRun, nrow=nrow)+
+    ylab(ylabel)+
+    xlab(xlabel)+
+    theme_grey(base_size=basesize)+
+    theme(legend.position="none")
   if(!is.null(ylim))
     p<- p + ylim(ylim)
   return(p)
@@ -230,11 +235,31 @@ plotMoltenVariableFacettedByVariable <- function(moltenDF, ylabel, facet_wrap=T)
     facet_wrap_option =facet_grid(variable ~ .)
   g<-ggplot(moltenDF, aes_string(x="tick", y="value", colour="modelRun", fill="modelRun"))+ #colour=modelRun, fill=modelRun,
     stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.y="mean", geom="line", linetype=1)+
-    stat_summary(data=moltenDF[moltenDF$tick%%5==0 | moltenDF$tick==39,],aes_string(group="modelRun",shape="modelRun"), fun.y="mean", geom="point", size=1.5)+
-    #stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", conf.int=.5, geom="smooth") +
-    #stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", conf.int=.9, geom="smooth")+
+    #stat_summary(data=moltenDF[moltenDF$tick%%5==0 | moltenDF$tick==39,],aes_string(group="modelRun",shape="modelRun"), fun.y="mean", geom="point", size=1.5)+
+    stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", fun.args=(conf.int=.5), geom="smooth") +
+    stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", fun.args=(conf.int=.9), geom="smooth")+
     facet_wrap_option+
     #facet_wrap(~ modelRun)+
+    theme(legend.position="bottom")+
+    scale_color_discrete(name="Scenario")+
+    scale_fill_discrete(name="Scenario")+
+    scale_shape_discrete(name="Scenario")+
+    xlab("Time [a]")+
+    ylab(ylabel)
+  return(g)
+}
+
+plotMoltenVariableFacettedByVariable3Countries <- function(moltenDF, ylabel, facet_wrap=T){
+  facet_wrap_option = facet_wrap(~ modelRun, scales="free_y")
+  if(!facet_wrap)
+    facet_wrap_option =facet_grid(variable ~ .)
+  g<-ggplot(moltenDF, aes_string(x="tick", y="value", colour="modelRun", fill="modelRun"))+ #colour=modelRun, fill=modelRun,
+    stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.y="mean", geom="line", linetype=1)+
+    #stat_summary(data=moltenDF[moltenDF$tick%%5==0 | moltenDF$tick==39,],aes_string(group="modelRun",shape="modelRun"), fun.y="mean", geom="point", size=1.5)+
+    #stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", fun.args=(conf.int=.5), geom="smooth") +
+    #stat_summary(aes_string(colour="modelRun", fill="modelRun", group="modelRun"), fun.data="median_hilow", fun.args=(conf.int=.9), geom="smooth")+
+    facet_wrap_option+
+    facet_wrap(~ moltenDF$variable)+
     theme(legend.position="bottom")+
     scale_color_discrete(name="Scenario")+
     scale_fill_discrete(name="Scenario")+
@@ -270,6 +295,16 @@ plotStackedTechnologyDiagram <- function(moltenVariable, ylabel, absolute=TRUE, 
   return(plotStackedDiagram(moltenVariable, ylabel, legendName="Technology", manuelPalette=technologyPalette, absolute=absolute, ...))
 }
 
+plotStackedTechnologyDiagram3Countries <- function(countryA,countryB,countryC){
+  stackCapA <-plotStackedTechnologyDiagram(moltenVariable=countryA,ylabel="Capacity [GW]")
+  stackCapB <-plotStackedTechnologyDiagram(moltenVariable=countryB,ylabel="Capacity [GW]")
+  stackCapC <-plotStackedTechnologyDiagram(moltenVariable=countryC,ylabel="Capacity [GW]")
+  mylegend<-g_legend(stackCapA)
+  p<-grid.arrange(arrangeGrob(stackCapA+theme(legend.position="none"), 
+                              stackCapB+theme(legend.position="none"),
+                              stackCapC+theme(legend.position="none"),ncol=3),mylegend,nrow=2,heights=c(10,1))
+  return(p)  
+}
 
 
 
@@ -314,3 +349,8 @@ theme_publication<-function(base_size=11, base_family="serif", ticks=TRUE){
   ret
 }
 
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}

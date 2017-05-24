@@ -173,10 +173,11 @@ public class ForecastDemandRole extends AbstractRole<Regulator>implements Role<R
 
                 peakGeneration = gens[(int) maxDemand[0]];
 
-                crossBorderCapacity = (peakGeneration - maxDemand[1]) * 1.01;
-
                 if (regulator.isCrossBorderTradeAllowed()) {
+
                     capacityObligationsForZone = peakGeneration;
+                    crossBorderCapacity = (peakGeneration - maxDemand[1]) * 1.01;
+
                 } else {
                     capacityObligationsForZone = maxDemand[1];
                 }

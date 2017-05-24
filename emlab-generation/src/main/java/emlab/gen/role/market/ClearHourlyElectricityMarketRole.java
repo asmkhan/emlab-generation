@@ -65,8 +65,65 @@ public class ClearHourlyElectricityMarketRole extends AbstractClearElectricitySp
         try {
 
             Government gov = template.findAll(Government.class).iterator().next();
+
             IloCplex cplex = new IloCplex();
+
+            cplex.setParam(IloCplex.DoubleParam.WorkMem, 3000.0);
+
+            cplex.setParam(IloCplex.DoubleParam.TreLim, 1500);
+
+            cplex.setParam(IloCplex.BooleanParam.MemoryEmphasis, true);
+
+            cplex.setParam(IloCplex.IntParam.Threads, 1);
+
+            cplex.setParam(IloCplex.IntParam.NodeFileInd, 2);
+
+            cplex.setParam(IloCplex.StringParam.WorkDir, "tmp/");
+
+            // cplex.setParam(IloCplex.IntParam.NodeAlg,
+            // IloCplex.Algorithm.Dual);
+            // cplex.setParam(IloCplex.IntParam.RootAlg,
+            // IloCplex.Algorithm.Dual);
+            // cplex.setParam(IloCplex.IntParam.SiftAlg,
+            // IloCplex.Algorithm.Dual);
+            //
+            // cplex.setDeleteMode(IloCplex.DeleteMode.LeaveBasis);
+            // cplex.setParam(IloCplex.IntParam.PPriInd, -1);
+            // cplex.setParam(IloCplex.IntParam.DPriInd, 1);
+            // cplex.setParam(IloCplex.IntParam.CraInd, -1);
+            // cplex.setParam(IloCplex.IntParam.VarSel, -1);
+            // cplex.setParam(IloCplex.IntParam.Threads, 1);
+            // cplex.setParam(IloCplex.IntParam.Symmetry, 0);
+            // cplex.setParam(IloCplex.IntParam.StrongItLim, 10);
+            // cplex.setParam(IloCplex.IntParam.SolnPoolCapacity, 1);
+            // cplex.setParam(IloCplex.IntParam.RINSHeur, -1);
+            // cplex.setParam(IloCplex.IntParam.RepairTries, 0);
+            // cplex.setParam(IloCplex.IntParam.RelaxPreInd, 0);
+            // cplex.setParam(IloCplex.IntParam.ReInv, 100);
+            // cplex.setParam(IloCplex.IntParam.Probe, 1);
+            // cplex.setParam(IloCplex.IntParam.PriceLim, 10);
+            // cplex.setParam(IloCplex.IntParam.PreslvNd, 1);
+            // cplex.setParam(IloCplex.IntParam.PrePass, 0);
+            // cplex.setParam(IloCplex.IntParam.PreDual, -1);
+            // cplex.setParam(IloCplex.IntParam.PerLim, 10);
+            // cplex.setParam(IloCplex.BooleanParam.PerInd, false);
+            // cplex.setParam(IloCplex.IntParam.ParallelMode, -1);
+            // cplex.setParam(IloCplex.IntParam.MIPSearch, 1);
+            // cplex.setParam(IloCplex.IntParam.FPHeur, -1);
+            // cplex.setParam(IloCplex.IntParam.DepInd, 0);
+            // cplex.setParam(IloCplex.IntParam.DiveType, 1);
+            // cplex.setParam(IloCplex.IntParam.CoeRedInd, 0);
+            // cplex.setParam(IloCplex.IntParam.BrDir, 1);
+            // cplex.setParam(IloCplex.IntParam.BndStrenInd, 0);
+            // cplex.setParam(IloCplex.IntParam.BBInterval, 0);
+            // cplex.setParam(IloCplex.IntParam.AggInd, 0);
+            // cplex.setParam(IloCplex.IntParam.AdvInd, 0);
+            // cplex.setParam(IloCplex.IntParam.AggFill, 10);
+            // cplex.setParam(IloCplex.IntParam.AggCutLim, 3);
+            // cplex.setParam(IloCplex.IntParam.NodeSel, 0);
+
             double co2Cap = gov.getCo2Cap(getCurrentTick());
+
             // logger.warn("Carbon cap is: " + co2Cap);
             List<Zone> zoneList = Utils.asList(reps.template.findAll(Zone.class));
             List<Interconnector> interconnectorList = Utils

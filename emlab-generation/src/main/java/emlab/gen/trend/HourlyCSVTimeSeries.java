@@ -50,7 +50,7 @@ public class HourlyCSVTimeSeries implements HourlyTimeSeries {
     private void readData() {
 
         this.persist();
-        logger.warn("Trying to read CSV file: " + filename);
+        // logger.warn("Trying to read CSV file: " + filename);
 
         String data = new String();
 
@@ -76,8 +76,9 @@ public class HourlyCSVTimeSeries implements HourlyTimeSeries {
                 e.printStackTrace();
             }
         } else {
-            logger.warn("Trying to read variable " + variableName + " from CSV file: " + filename + " with delimiter "
-                    + delimiter);
+            // logger.warn("Trying to read variable " + variableName + " from
+            // CSV file: " + filename + " with delimiter "
+            // + delimiter);
 
             // Save the data in a long String
             try {

@@ -459,7 +459,7 @@
 	
 	<bean id="regulatorA" class="emlab.gen.domain.agent.Regulator"
 		p:name="Regulator A" p:capacityMarketPriceCap="60000"
-		p:reserveMargin="0.08" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
+		p:reserveMargin="0.095" p:targetPeriod="0" p:crossBorderTradeAllowed="false"
 		p:reserveDemandLowerMargin="0.025" p:reserveDemandUpperMargin="0.025"
 		p:numberOfYearsLookingBackToForecastDemand="4"> 
 		<property name="zone" ref="nl" />

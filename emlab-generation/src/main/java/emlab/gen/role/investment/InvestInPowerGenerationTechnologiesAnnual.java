@@ -126,8 +126,7 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
         // logger.warn("{} used to expect CO2 prices {}", agent.getName(),
         // expectedCO2PriceOld);
 
-        long futureTimePoint1 = agent.getInvestmentFutureTimeHorizon() * 2;
-        // logger.warn(expectedCO2Price.toString());
+        long futureTimePoint1 = agent.getInvestmentFutureTimeHorizon();
 
         // Demand
         Map<ElectricitySpotMarket, Double> expectedDemand = new HashMap<ElectricitySpotMarket, Double>();
@@ -149,7 +148,11 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 else
                     avgGrowthFactor += elm.getDemandGrowthTrend().getValue(0);
             }
-            expectedDemand.put(elm, (Math.pow(((avgGrowthFactor / iteration) + 0.04), (double) futureTimePoint1)));
+            // expectedDemand.put(elm, (Math.pow(((avgGrowthFactor / iteration)
+            // + 0.03), (double) futureTimePoint1)));
+
+            expectedDemand.put(elm, (Math.pow((avgGrowthFactor / iteration), (double) futureTimePoint1)));
+
             // logger.warn("avgGrowthFactor: " + avgGrowthFactor);
             // logger.warn("iteration: " + iteration);
             // logger.warn("futureTimePoint: " + futureTimePoint);
@@ -162,11 +165,19 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
         MarketInformation marketInformation = new MarketInformation(market, expectedDemand, expectedFuelPrices,
                 expectedCO2Price.get(market).doubleValue(), futureTimePoint);
 
-        double highestValue = Double.MIN_VALUE;
+        // double highestValue = Double.MIN_VALUE;
+        double highestValue = -100000000;
         PowerGeneratingTechnology bestTechnology = null;
         PowerGridNode bestNode = null;
 
+        // logger.warn("demandFactor: " +
+        // expectedDemand.get(market).doubleValue());
+        // logger.warn(" marketInformation.maxExpectedLoad" +
+        // marketInformation.maxExpectedLoad);
+
         for (PowerGeneratingTechnology technology : reps.genericRepository.findAll(PowerGeneratingTechnology.class)) {
+
+            // logger.warn("technology: " + technology);
 
             DecarbonizationModel model = reps.genericRepository.findAll(DecarbonizationModel.class).iterator().next();
 
@@ -237,25 +248,38 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
 
                 if ((expectedInstalledCapacityOfTechnology + plant.getActualNominalCapacity())
                         / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
+                                .getMaximumInstalledCapacityFractionInCountry()) {
 
-                .getMaximumInstalledCapacityFractionInCountry()) {
-
-                    // logger.warn(agent +
-                    // " will not invest in {} technology because there's too
-                    // much of this type in the market",
+                    // logger.warn(
+                    // agent + " will not invest in {} technology because
+                    // there's too much of this type in the market",
                     // technology);
+
                 } else if ((expectedInstalledCapacityOfTechnologyInNode
                         + plant.getActualNominalCapacity()) > pgtNodeLimit) {
 
+                    // logger.warn(
+                    // agent + " will not invest in {} technology because tech
+                    // reached its limit in the market",
+                    // technology);
+
                 } else if (expectedOwnedCapacityInMarketOfThisTechnology > expectedOwnedTotalCapacityInMarket
                         * technology.getMaximumInstalledCapacityFractionPerAgent()) {
-                    // logger.warn(agent +
-                    // " will not invest in {} technology because there's too
-                    // much capacity planned by him",
+
+                    // logger.warn(
+                    // agent + " will not invest in {} technology because
+                    // there's too much capacity planned by him",
                     // technology);
+
                 } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
-                    // logger.warn("Not investing because more than 20% of
-                    // demand in pipeline.");
+
+                    // logger.warn("capacityInPipelineInMarket" +
+                    // capacityInPipelineInMarket);
+                    // logger.warn(" marketInformation.maxExpectedLoad" +
+                    // marketInformation.maxExpectedLoad);
+
+                    // logger.warn(agent + "Not investing because more than 20%
+                    // of demand in pipeline.");
 
                     // } else if (expectedFutureCapacity > (1.3 *
                     // marketInformation.maxExpectedLoad)) {
@@ -272,17 +296,21 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 } else if ((capacityOfTechnologyInPipeline > 2.0 * operationalCapacityOfTechnology)
                         && capacityOfTechnologyInPipeline > 9000) { // TODO:
                     // reflects that you cannot expand a technology out of zero.
-                    // logger.warn(agent +
-                    // " will not invest in {} technology because there's too
-                    // much capacity in the pipeline",
+
+                    // logger.warn(
+                    // agent + " will not invest in {} technology because
+                    // there's too much capacity in the pipeline",
                     // technology);
+
                 } else if (plant.getActualInvestedCapital()
                         * (1 - agent.getDebtRatioOfInvestments()) > agent.getDownpaymentFractionOfCash()
                                 * agent.getCash()) {
-                    // logger.warn(agent +
-                    // " will not invest in {} technology as he does not have
-                    // enough money for down payment",
+
+                    // logger.warn(
+                    // agent + " will not invest in {} technology as he does not
+                    // have enough money for down payment",
                     // technology);
+
                 } else {
 
                     Map<Substance, Double> myFuelPrices = new HashMap<Substance, Double>();
@@ -339,10 +367,13 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                     // expect to meet minimum running hours?
                     // logger.warn("Running Hours: " + runningHours);
                     if (runningHours < plant.getTechnology().getMinimumRunningHours()) {
-                        // logger.warn(agent+
-                        // " will not invest in {} technology as he expect to
-                        // have {} running, which is lower then required",
+
+                        // logger.warn(
+                        // agent + " will not invest in {} technology as he
+                        // expect to have {} running, which is lower then
+                        // required",
                         // technology, runningHours);
+
                     } else {
 
                         double fixedOMCost = calculateFixedOperatingCost(plant, getCurrentTick());// /
@@ -383,9 +414,16 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                             } else {
                                 totalPeakCapacityAtFuturePoint = reps.powerPlantRepository
                                         .calculatePeakCapacityOfOperationalPowerPlantsInMarket(market, futureTimePoint);
-                                totalPeakDemandAtFuturePoint = (regulator.getDemandTarget()
-                                        / (1 + regulator.getReserveMargin() - phaseInPeriod))
-                                        * expectedDemand.get(market);
+                                totalPeakDemandAtFuturePoint = regulator.getDemandTarget() * expectedDemand.get(market);
+
+                                // / (1 + regulator.getReserveMargin() -
+                                // phaseInPeriod))
+                                // * expectedDemand.get(market);
+
+                                // logger.warn(
+                                // " cap markt paramater: " + (1 +
+                                // regulator.getReserveMargin() -
+                                // phaseInPeriod));
                             }
                             // expectedDemand.get(market).doubleValue();
 
@@ -569,6 +607,8 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                         double projectValue = (totalDiscountedCashInFlowsForPowerPlant
                                 + totalDiscountedCashOutFlowsForPowerPlant) / -totalDiscountedCashOutFlowsForPowerPlant;
 
+                        // logger.warn("projectValue = " + projectValue);
+
                         // **************************************************
 
                         // if (technology.isIntermittent()) {
@@ -603,7 +643,9 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                         // bestTechnology = plant.getTechnology();
                         // bestNode = node;
 
-                        if (projectValue > 0 && projectValue > highestValue) {
+                        // if (projectValue > 0 && projectValue > highestValue)
+                        // {
+                        if (projectValue > highestValue) {
                             highestValue = projectValue;
                             bestTechnology = plant.getTechnology();
                             bestNode = node;
@@ -875,6 +917,8 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
             // logger.warn("Demand factor:" + demandFactor);
 
             // find expected prices per segment given merit order
+
+            double count = 0;
             for (SegmentLoad segmentLoad : market.getLoadDurationCurve()) {
                 double expectedSegmentLoad;
                 if (model.isNoPrivateIntermittentRESInvestment())
@@ -886,7 +930,7 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 if (expectedSegmentLoad > maxExpectedLoad) {
                     maxExpectedLoad = expectedSegmentLoad;
                     // logger.warn("maxExpectedLoad: " + maxExpectedLoad);
-                    // logger.warn("maxExpectedLoad: " + demandFactor);
+                    // logger.warn("demandFactor: " + demandFactor);
                 }
 
                 double segmentSupply = 0d;
@@ -929,15 +973,17 @@ public class InvestInPowerGenerationTechnologiesAnnual<T extends EnergyProducer>
                 if (segmentSupply >= expectedSegmentLoad
                         && ((totalCapacityAvailable - expectedSegmentLoad) <= (reserveVolume))) {
                     expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), reservePrice);
-                    // logger.warn("Price: "+
+                    // logger.warn("Price: " +
                     // expectedElectricityPricesPerSegment);
                 } else if (segmentSupply >= expectedSegmentLoad
                         && ((totalCapacityAvailable - expectedSegmentLoad) > (reserveVolume))) {
                     expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), segmentPrice);
-                    // logger.warn("Price: "+
+                    // logger.warn("Price: " +
                     // expectedElectricityPricesPerSegment);
                 } else {
                     expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), market.getValueOfLostLoad());
+                    // logger.warn("Price: " +
+                    // expectedElectricityPricesPerSegment);
                 }
 
             }

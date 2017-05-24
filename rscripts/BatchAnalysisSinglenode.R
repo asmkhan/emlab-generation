@@ -10,27 +10,37 @@ nrowLength<-1
 filePrefix<-"P1-"
 
 ##---- Read in of Data                     ------------------
-#Get all the data frames at once (only common columns)
+
+# Get all data in a single frame at once (only common columns)
 bigDF <- getDataFrameForModelRunsInFolder("~/Desktop/emlabGen/output/P1/")
+
+# Converting all nulls to zero
 bigDF[is.na(bigDF)] <- 0
+
+# Converting consumer spending into positve values
 bigDF$SpotMarketCash_Country.A.electricity.spot.market<-abs(bigDF$SpotMarketCash_Country.A.electricity.spot.market)
+
+# Changing the names of the total producer cash columns
 colnames(bigDF)[which(names(bigDF) == "TotalProducerStakeholderCash_Stakeholder.A")] <- "TotalProducerCash_Stakeholder.A"
 colnames(bigDF)[which(names(bigDF) == "TotalProducerStakeholderCash_Stakeholder.B")] <- "TotalProducerCash_Stakeholder.B"
 colnames(bigDF)[which(names(bigDF) == "TotalProducerStakeholderCash_Stakeholder.C")] <- "TotalProducerCash_Stakeholder.C"
 colnames(bigDF)[which(names(bigDF) == "TotalProducerStakeholderCash_Stakeholder.D")] <- "TotalProducerCash_Stakeholder.D"
 colnames(bigDF)[which(names(bigDF) == "TotalProducerStakeholderCash_Stakeholder.E")] <- "TotalProducerCash_Stakeholder.E"
 
+# Summing up the producer and stakeholder cash from the data frame
 bigDF<-addSumOfVariablesByPrefixToDF(bigDF,"TotalProducerCash")
 bigDF<-addSumOfVariablesByPrefixToDF(bigDF,"StakeholderCash")
 
 #bigDF$TotalProducerStakeholderCashSum<-abs(bigDF$TotalProducerStakeholderCashSum)
-#Get data frames one by one
+
+# Get data frames one by one for each scenario
 bigDF1<-getDataFrameForModelRun("~/Desktop/emlabGen/output/P1/","P1Scen1", "")
 bigDF2<-getDataFrameForModelRun("~/Desktop/emlabGen/output/P1/","P1Scen2", "")
 bigDF3<-getDataFrameForModelRun("~/Desktop/emlabGen/output/P1/","P1Scen3", "")
 bigDF4<-getDataFrameForModelRun("~/Desktop/emlabGen/output/P1/","P1Scen4", "")
 bigDF5<-getDataFrameForModelRun("~/Desktop/emlabGen/output/P1/","P1Scen5", "")
 
+# Converting capacity market table query to csv files
 capacityMarketPrices3<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen3","CapacityClearingPoint")
 capacityMarketPrices3$modelRun <- rep("P1Scen3",nrow(capacityMarketPrices3))
 capacityMarketPrices4<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen4","CapacityClearingPoint")
@@ -40,6 +50,7 @@ capacityMarketPrices5$modelRun <- rep("P1Scen5",nrow(capacityMarketPrices5))
 
 capacityMarketPricesAll<-rbind(capacityMarketPrices3,capacityMarketPrices4,capacityMarketPrices5)
 
+# Converting producer costs table query to csv files
 producerCosts1<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen1","ProducerCosts")
 producerCosts1$modelRun <- rep("P1Scen1",nrow(producerCosts1))
 producerCosts2<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen2","ProducerCosts")
@@ -54,6 +65,7 @@ producerCosts5$modelRun <- rep("P1Scen5",nrow(producerCosts5))
 producerCostsAll<-rbind(producerCosts1,producerCosts2,producerCosts3,producerCosts4,producerCosts5)
 colnames(producerCostsAll)[which(names(producerCostsAll) == "Tick")] <- "tick"
 
+# Converting producer profits table query to csv files
 producerProfits1<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen1","ProducerProfits")
 producerProfits1$modelRun <- rep("P1Scen1",nrow(producerProfits1))
 producerProfits2<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen2","ProducerProfits")
@@ -68,28 +80,30 @@ producerProfits5$modelRun <- rep("P1Scen5",nrow(producerProfits5))
 producerProfitsAll<-rbind(producerProfits1,producerProfits2,producerProfits3,producerProfits4,producerProfits5)
 colnames(producerProfitsAll)[which(names(producerProfitsAll) == "Tick")] <- "tick"
 
-welfareBoxplotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "Avg_El_PricesinEURpMWh_Country.A")
+# creating data frames for box plots
+electrictyPricesBoxplotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "Avg_El_PricesinEURpMWh_Country.A")
 consumerCostBoxplotData<-subset(bigDF, tick==39)
 consumerCostBoxplotData<-ddply(consumerCostBoxplotData, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunId,function(x){x}, "SpotMarketCash_Country.A.electricity.spot.market")
 producerCashBoxPlotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "TotalProducerCashSum")
 stakeholderCashBoxPlotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "StakeholderCashSum")
-co2PriceBoxPlotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunId, sum, "CO2Price_Decarbonization.Model")
+co2PriceBoxPlotData<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "CO2Price_Decarbonization.Model")
+capMarketPriceBoxplotData<-ddply(capacityMarketPricesAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "price")
+capMarketVolumeBoxplotData<-ddply(capacityMarketPricesAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "volume")
+producerCostsBoxplotData<-ddply(producerCostsAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "Money")
+producerProfitsBoxplotData<-ddply(producerProfitsAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "Money")
+consumerCostBoxplotData1<-ddply(bigDF, .variables=c("runId", "modelRun"),.fun=functionOfVariablePerRunIdAverage, sum, "SpotMarketCash_Country.A.electricity.spot.market")
 
 
+# Plots for average electricty prices
 avgPricePlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "Avg_El_PricesinEURpMWh_Country.A", "Avg. Electricity Price in Country A [EUR/MW]")
 if(showPlots) avgPricePlotinA
 if(savePlots) ggsave(filename= paste(filePrefix, "avgPricePlotinA.pdf", sep=""),plot=avgPricePlotinA, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
-elpriceBoxplot<-qplot(x=modelRun, y=V1, data=welfareBoxplotData, geom="boxplot")+xlab("Scenario")+ylab(" Avg. Electricity Price")+theme_grey(base_size=13)
+elpriceBoxplot<-qplot(x=modelRun, y=V1, data=electrictyPricesBoxplotData, geom="boxplot")+xlab("Scenario")+ylab(" Avg. Electricity Price")+theme_grey(base_size=13)
 if(showPlots) elpriceBoxplot
 if(savePlots) ggsave(filename= paste(filePrefix, "electricityPriceBoxplot.pdf", sep=""),plot=elpriceBoxplot, width=30, height=20, units="cm", scale=scaleFactor)
 
-capMarketPriceBoxplotData<-ddply(capacityMarketPricesAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "price")
-capMarketVolumeBoxplotData<-ddply(capacityMarketPricesAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "volume")
-
-producerCostsBoxplotData<-ddply(producerCostsAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "Money")
-producerProfitsBoxplotData<-ddply(producerProfitsAll, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "Money")
-
+# Plots for capacity market price
 capMarketPricePlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(capacityMarketPricesAll, "price", "Capacity Market Price in Country A [EUR/MW]")
 if(showPlots) capMarketPricePlotinA
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketPrices.pdf", sep=""),plot=capMarketPricePlotinA, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -98,6 +112,7 @@ capMarketPriceBoxPlot<-qplot(x=modelRun, y=V1, data=capMarketPriceBoxplotData, g
 if(showPlots) capMarketPriceBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketPricesBoxPlot.pdf", sep=""),plot=capMarketPriceBoxPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for capacity market volume
 capMarketVolumePlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(capacityMarketPricesAll, "volume", "Capacity Market Clearing Volume in Country A [EUR/MW]")
 if(showPlots) capMarketVolumePlotinA
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketClearingVolume.pdf", sep=""),plot=capMarketVolumePlotinA, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -106,6 +121,7 @@ capMarketVolumeBoxPlot<-qplot(x=modelRun, y=V1, data=capMarketVolumeBoxplotData,
 if(showPlots) capMarketVolumeBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketClearingVolumeBoxPlot.pdf", sep=""),plot=capMarketVolumeBoxPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for consumer costs
 consumerCostsPlot<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "SpotMarketCash_Country.A.electricity.spot.market", "Consumer Costs")
 if(showPlots) consumerCostsPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "consumerCostsPlotinA.pdf", sep=""),plot=consumerCostsPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -114,10 +130,14 @@ consumerCostBoxplot<-qplot(x=modelRun, y=V1, data=consumerCostBoxplotData, geom=
 if(showPlots) consumerCostBoxplot
 if(savePlots) ggsave(filename= paste(filePrefix, "consumerCostBoxplot.pdf", sep=""),plot=consumerCostBoxplot, width=30, height=20, units="cm", scale=scaleFactor)
 
+consumerCostBoxplot1<-qplot(x=modelRun, y=V1, data=consumerCostBoxplotData1, geom="boxplot")+xlab("Scenario")+ylab("Accumulative Consumer Costs")+theme_grey(base_size=13)
+if(showPlots) consumerCostBoxplot1
+if(savePlots) ggsave(filename= paste(filePrefix, "consumerCostBoxplot1.pdf", sep=""),plot=consumerCostBoxplot, width=30, height=20, units="cm", scale=scaleFactor)
 
 # capMarketDemandTarget<-plotSpaghettiTimeSeries(bigDF3, "CapacityMarketDemandTarget_Country.A","trial","Time [a]", NULL, 8)
 # if(showPlots) capMarketDemandTarget
 
+# Getting capacity market demand target into data frame
 capMarketDemandTarget1<-meltPrefixVariables(bigDF3,"CapacityMarketDemandTarget_Country.A")
 capMarketDemandTarget1$modelRun<- rep("P1Scen3",nrow(capMarketDemandTarget1))
 capMarketDemandTarget2<-meltPrefixVariables(bigDF4,"CapacityMarketDemandTarget_Country.A")
@@ -127,6 +147,7 @@ capMarketDemandTarget3$modelRun<- rep("P1Scen5",nrow(capMarketDemandTarget3))
 capMarketDemandTargets<-rbind(capMarketDemandTarget1,capMarketDemandTarget2,capMarketDemandTarget3)
 capMarketDemandTargetsBoxPlotData<-ddply(capMarketDemandTargets, .variables=c("runId", "modelRun","tick"),.fun=functionOfVariablePerRunId, sum, "value")
 
+# Getting total demand shifted into data frame
 drTotalDemandShifted1<-meltPrefixVariables(bigDF2,"SpotMarketTotalElasticDemand_Country.A.electricity.spot.market")
 drTotalDemandShifted1$modelRun<-rep("P1Scen2",nrow(drTotalDemandShifted1))
 drTotalDemandShifted2<-meltPrefixVariables(bigDF4,"SpotMarketTotalElasticDemand_Country.A.electricity.spot.market")
@@ -135,6 +156,7 @@ drTotalDemandShifted3<-meltPrefixVariables(bigDF5,"SpotMarketTotalElasticDemand_
 drTotalDemandShifted3$modelRun<-rep("P1Scen5",nrow(drTotalDemandShifted3))
 drTotalDemandShifted<-rbind(drTotalDemandShifted1,drTotalDemandShifted2,drTotalDemandShifted3)
 
+# Getting total storage capacity into data frame
 storageCapacity1<-meltPrefixVariables(bigDF2,"StorageCapacity_Storage.Unit.for.NL.ESM")
 storageCapacity1$modelRun<-rep("P1Scen2",nrow(storageCapacity1))
 storageCapacity2<-meltPrefixVariables(bigDF4,"StorageCapacity_Storage.Unit.for.NL.ESM")
@@ -143,6 +165,7 @@ storageCapacity3<-meltPrefixVariables(bigDF5,"StorageCapacity_Storage.Unit.for.N
 storageCapacity3$modelRun<-rep("P1Scen5",nrow(storageCapacity2))
 storageCapacityAll<-rbind(storageCapacity1,storageCapacity2,storageCapacity3)
 
+# Getting total storage discharging cycles into data frame
 storageDischarge1<-meltPrefixVariables(bigDF2,"StorageDischargingCycles_Storage.Unit.for.NL.ESM")
 storageDischarge1$modelRun<-rep("P1Scen2",nrow(storageDischarge1))
 storageDischarge1$value<-(storageDischarge1$value)/2
@@ -154,6 +177,7 @@ storageDischarge3$modelRun<-rep("P1Scen5",nrow(storageDischarge3))
 storageDischarge3$value<-(storageDischarge3$value)/2
 storageDischargeAll<-rbind(storageDischarge1,storageDischarge2,storageDischarge3)
 
+# Plots for capacity market demand targets
 capMarketDemandTargetPlot<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(capMarketDemandTargets, "value", "Cap. Market Demand Target")
 if(showPlots) capMarketDemandTargetPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketDemandTarget.pdf", sep=""),plot=capMarketDemandTargetPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -162,26 +186,32 @@ capMarketDemandTargetBoxPlot<-qplot(x=modelRun, y=V1, data=capMarketDemandTarget
 if(showPlots) capMarketDemandTargetBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "capMarketDemandTargetBoxPlot.pdf", sep=""),plot=capMarketDemandTargetBoxPlot, width=30, height=20, units="cm", scale=scaleFactor)
 
+# Plots for total demand shifted
 drTotalDemandShiftedPlot<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(drTotalDemandShifted, "value", "Total Demand Shifted")
 if(showPlots) drTotalDemandShiftedPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "totalDemandShifted.pdf", sep=""),plot=drTotalDemandShiftedPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for storage capacity
 storageCapacityPlot<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(storageCapacityAll, "value", "Storage Capacity")
 if(showPlots) storageCapacityPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "storageCapacity.pdf", sep=""),plot=storageCapacityPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for storage discharging cycles
 storageDischargePlot<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(storageDischargeAll, "value", "Storage Discharging Cycles")
 if(showPlots) storageDischargePlot
 if(savePlots) ggsave(filename= paste(filePrefix, "storageDischargeCycles.pdf", sep=""),plot=storageDischargePlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for shortage in hours
 shortageInHours<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "ShortageInHours_Country.A", "Shortage in Hours in Country A [h]")
 if(showPlots) shortageInHours
 if(savePlots) ggsave(filename= paste(filePrefix, "shortageinA.pdf", sep=""),plot=shortageInHours, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# Plots for shortage in MWh
 unservedEnergy<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "EnergyNotServedinMWh_Country.A", "Energy Not Served in Country A [MWh]")
 if(showPlots) unservedEnergy
 if(savePlots) ggsave(filename= paste(filePrefix, "unservedEnergyinA.pdf", sep=""),plot=unservedEnergy, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# plots for producer and stakeholder cash
 producerCash<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "TotalProducerCashSum", "Total Producer Cash [EUR]")
 if(showPlots) producerCash
 if(savePlots) ggsave(filename= paste(filePrefix, "totalProducerCashinCountryA.pdf", sep=""),plot=producerCash, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -198,6 +228,7 @@ stakeholderCashBoxPlot<-qplot(x=modelRun, y=V1, data=stakeholderCashBoxPlotData,
 if(showPlots) stakeholderCashBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "totalStakeholderCashBoxPlot.pdf", sep=""),plot=stakeholderCashBoxPlot, width=30, height=20, units="cm", scale=scaleFactor)
 
+# plots for carbon price
 co2Price<-plotTimeSeriesWithConfidenceIntervalByFacettedGroup(bigDF, "CO2Price_Decarbonization.Model", "CO2 Price [EUR]")
 if(showPlots) co2Price
 if(savePlots) ggsave(filename= paste(filePrefix, "co2Price.pdf", sep=""),plot=co2Price, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -206,6 +237,7 @@ co2PriceBoxPlot<-qplot(x=modelRun, y=V1, data=co2PriceBoxPlotData, geom="boxplot
 if(showPlots) co2PriceBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "co2PriceBoxPlot.pdf", sep=""),plot=co2PriceBoxPlot, width=30, height=20, units="cm", scale=scaleFactor)
 
+# plots for producer costs
 producerCostsPlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(producerCostsBoxplotData, "V1", "Producer Costs in Country A [EUR]")
 if(showPlots) producerCostsPlotinA
 if(savePlots) ggsave(filename= paste(filePrefix, "producerCostsPlotinA.pdf", sep=""),plot=producerCostsPlotinA, width=15.66, height=10.44, units="cm", scale=scaleFactor)
@@ -214,11 +246,12 @@ producerCostsBoxPlot<-qplot(x=modelRun, y=V1, data=producerCostsBoxplotData, geo
 if(showPlots) producerCostsBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "producerCostsBoxPlot.pdf", sep=""),plot=producerCostsBoxPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
-producerProfitsPlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(producerProfitsBoxplotData, "V1", "Producer Profits in Country A [EUR]")
+# plots for producer profits
+producerProfitsPlotinA<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(producerProfitsBoxplotData, "V1", "Producer Cash in Country A [EUR]")
 if(showPlots) producerProfitsPlotinA
 if(savePlots) ggsave(filename= paste(filePrefix, "producerProfitsPlotinA.pdf", sep=""),plot=producerProfitsPlotinA, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
-producerProfitsBoxPlot<-qplot(x=modelRun, y=V1, data=producerProfitsBoxplotData, geom="boxplot")+xlab("Scenario")+ylab(" Producer Profits [EUR]")+theme_grey(base_size=13)
+producerProfitsBoxPlot<-qplot(x=modelRun, y=V1, data=producerProfitsBoxplotData, geom="boxplot")+xlab("Scenario")+ylab(" Producer Cash [EUR]")+theme_grey(base_size=13)
 if(showPlots) producerProfitsBoxPlot
 if(savePlots) ggsave(filename= paste(filePrefix, "producerProfitsBoxPLot.pdf", sep=""),plot=producerProfitsBoxPlot, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
@@ -226,6 +259,7 @@ if(savePlots) ggsave(filename= paste(filePrefix, "producerProfitsBoxPLot.pdf", s
 # supplyRatioPlot1<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutModelRun(bigDF, "SupplyRatio_Country.A", "Supply Ratio Jorn")
 # if(showPlots) supplyRatioPlot1
 
+# plots for supply ratio with 56% RES availability
 peakSupply1<-meltPrefixVariables(bigDF,"TotalOperationalCapacityPerZoneInMW_Country.A")
 peakDemand1<-meltPrefixVariables(bigDF,"SpotMarketPeakLoad_Country.A.electricity.spot.market")
 supplyRatio1<-cbind(peakSupply1)
@@ -234,7 +268,7 @@ supplyRatioPlot1<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutMode
 if(showPlots) supplyRatioPlot1
 if(savePlots) ggsave(filename= paste(filePrefix, "supplyRatio1.pdf", sep=""),plot=supplyRatioPlot1, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
-
+# plots for supply ratio with 16% RES availability
 peakSupply2<-meltPrefixVariables(bigDF,"TotalOperationalIntermittentCapacityPerZoneInMW_Country.A")
 peakSupply2$value<-peakSupply2$value*0.3
 temp<-meltPrefixVariables(bigDF,"TotalOperationalNonIntermittentCapacityPerZoneInMW_Country.A")
@@ -246,6 +280,7 @@ supplyRatioPlot2<-plotTimeSeriesWithConfidenceIntervalByFacettedGroupWithoutMode
 if(showPlots) supplyRatioPlot2
 if(savePlots) ggsave(filename= paste(filePrefix, "supplyRatio2.pdf", sep=""),plot=supplyRatioPlot2, width=15.66, height=10.44, units="cm", scale=scaleFactor)
 
+# plots for supply mix
 capacities1<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen1","CapacityinMWPerTechPerZone")
 capacities1$modelRun <- rep("P1Scen1",nrow(capacities1))
 capacities2<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen2","CapacityinMWPerTechPerZone")
@@ -259,7 +294,6 @@ capacities5$modelRun <- rep("P1Scen5",nrow(capacities5))
 
 capacitiesAll<-rbind(capacities1,capacities2,capacities3,capacities4,capacities5)
 
-
 capacitiesAll$market<-NULL
 colnames(capacitiesAll)[which(names(capacitiesAll) == "technology")] <- "variable"
 colnames(capacitiesAll)[which(names(capacitiesAll) == "capacity")] <- "value"
@@ -269,5 +303,28 @@ stackedCapacities<-plotStackedTechnologyDiagram(moltenVariable=capacitiesAll,yla
 if(showPlots) stackedCapacities
 if(savePlots) ggsave(filename= paste(filePrefix, "stackedCapacityDiagram.pdf", sep=""),plot=stackedCapacities, width= 15.66, height= 14, units="cm", scale=scaleFactor)
 
-LDC<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen3","PriceVolumeLengthInHoursPerSegment")
+# plots for generation mix
+generation1<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen1","GenerationinMWhPerZone")
+generation1$modelRun <- rep("P1Scen1",nrow(generation1))
+generation2<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen2","GenerationinMWhPerZone")
+generation2$modelRun <- rep("P1Scen2",nrow(generation2))
+generation3<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen3","GenerationinMWhPerZone")
+generation3$modelRun <- rep("P1Scen3",nrow(generation3))
+generation4<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen4","GenerationinMWhPerZone")
+generation4$modelRun <- rep("P1Scen4",nrow(generation4))
+generation5<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen4","GenerationinMWhPerZone")
+generation5$modelRun <- rep("P1Scen5",nrow(generation5))
 
+generationAll<-rbind(generation1,generation2,generation3,generation4,generation5)
+colnames(generationAll)[which(names(generationAll) == "technology")] <- "variable"
+colnames(generationAll)[which(names(generationAll) == "generation")] <- "value"
+generationAll$market<-NULL
+generationAll<-aggregate(generationAll$value, by=list(variable=generationAll$variable,tick=generationAll$tick,runId=generationAll$runId,modelRun<-generationAll$modelRun), FUN=sum)
+colnames(generationAll)[which(names(generationAll) == "x")] <- "value"
+colnames(generationAll)[which(names(generationAll) == "Group.4")] <- "modelRun"
+generationAll$value<-generationAll$value/1000000
+stackedGeneration<-plotStackedTechnologyDiagram(moltenVariable=generationAll,ylabel="Generation [TWh]")
+if(showPlots) stackedGeneration
+if(savePlots) ggsave(filename= paste(filePrefix, "stackedGenerationDiagram.pdf", sep=""),plot=stackedGeneration, width= 15.66, height= 14, units="cm", scale=scaleFactor)
+
+#LDC<-getTableForRunId("~/Desktop/emlabGen/output/P1/","P1Scen3","PriceVolumeLengthInHoursPerSegment")

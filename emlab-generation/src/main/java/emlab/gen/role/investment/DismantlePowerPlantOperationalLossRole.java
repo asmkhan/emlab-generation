@@ -282,7 +282,7 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
 
             // logger.warn("profitability " + plant.getProfitability());
 
-            if (plant.getProfitability() < 0 && plant.getActualLifetime() > 6) {
+            if (plant.getProfitability() < 0 && plant.getActualLifetime() > 5) {
 
                 // double totalInvestment =
                 // plant.getTechnology().getInvestmentCost(plant.getConstructionStartTime())
@@ -346,7 +346,9 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                     // demandGrowthFactor = Math.pow(avgGrowthFactor /
                     // iteration,
                     // (double) (getCurrentTick() + iterator));
-                    demandGrowthFactor = (avgGrowthFactor / iteration) + 0.04;
+                    // demandGrowthFactor = (avgGrowthFactor / iteration) +
+                    // 0.04;
+                    demandGrowthFactor = (avgGrowthFactor / iteration);
                 }
 
                 // Could not understand the purpose of the following
@@ -654,19 +656,26 @@ public class DismantlePowerPlantOperationalLossRole extends AbstractRole<Electri
                             // downpayment);
                         }
                     }
-                    if (getCurrentTick() < 8 && plant.getActualLifetime() < 17) {
-                        // logger.warn(" ********************** TOO early to
-                        // dismantle: " + plant.getName() + " Age "
-                        // + plant.getActualLifetime());
-                    } else if (market.isDailyDemandResponseImplemented() && plant.getActualLifetime() < 11
-                            && !plant.getOwner().isSimpleCapacityMarketEnabled()) {
 
-                    } else {
-                        // logger.warn(" ********************** ENERGY PRODUCER
-                        // DISMANTLED: " + plant.getName() + " Age "
-                        // + plant.getActualLifetime());
-                        plant.dismantlePowerPlant(getCurrentTick());
-                    }
+                    plant.dismantlePowerPlant(getCurrentTick());
+
+                    // if (getCurrentTick() < 8 && plant.getActualLifetime() <
+                    // 17) {
+                    // // logger.warn(" ********************** TOO early to
+                    // // dismantle: " + plant.getName() + " Age "
+                    // // + plant.getActualLifetime());
+                    //
+                    // // } else if (market.isDailyDemandResponseImplemented()
+                    // // && plant.getActualLifetime() < 11
+                    // // && !plant.getOwner().isSimpleCapacityMarketEnabled())
+                    // // {
+                    //
+                    // } else {
+                    // // logger.warn(" ********************** ENERGY PRODUCER
+                    // // DISMANTLED: " + plant.getName() + " Age "
+                    // // + plant.getActualLifetime());
+                    // plant.dismantlePowerPlant(getCurrentTick());
+                    // }
                 }
             }
         }
