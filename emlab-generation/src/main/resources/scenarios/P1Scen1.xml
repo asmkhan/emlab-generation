@@ -180,7 +180,7 @@
 	<!-- Electricity Spot -->
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="false"
-		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
+		p:referencePrice="40" p:valueOfLostLoad="11000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
 		p:storageImplemented="false" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />

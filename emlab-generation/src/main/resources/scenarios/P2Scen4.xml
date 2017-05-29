@@ -39,6 +39,28 @@
 	
 	<!-- Demand Growth Trend -->
 
+<!-- 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-#demandGrowthTrendNL" /> -->
+		
+<!-- 	<bean id="demandGrowthTrendFBL" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendFBL-#demandGrowthTrendFBL" /> -->
+		
+<!-- 	<bean id="demandGrowthTrendDE" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendDE-#demandGrowthTrendDE" /> -->
+	
+	<!-- Fuel Prices -->
+	
+<!-- 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-#coalPrice" /> -->
+<!-- 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-#gasPrice" /> -->
+<!-- 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-#biomassPrice" /> -->
+<!-- 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-#uraniumPrice" /> -->
+
+	<!-- Demand Growth Trend -->
+
 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader"
 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-1" />
 		
@@ -347,7 +369,7 @@
 	
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
-		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
+		p:referencePrice="40" p:valueOfLostLoad="11000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
 		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />
@@ -446,7 +468,7 @@
 	
 	<bean id="frbeluxElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country B electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
-		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
+		p:referencePrice="40" p:valueOfLostLoad="11000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
 		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendFBL" />
@@ -545,7 +567,7 @@
 	
 	<bean id="germanElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country C electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
-		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
+		p:referencePrice="40" p:valueOfLostLoad="11000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
 		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendDE" />

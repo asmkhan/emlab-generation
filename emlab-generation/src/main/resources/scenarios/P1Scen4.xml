@@ -29,21 +29,36 @@
 		p:noPrivateIntermittentRESInvestment="false">
 	</bean>
 
-	<!-- Demand Growth Trend -->
+		<!-- Demand Growth Trend -->
 
+<!-- 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-#demandGrowthTrendNL" /> -->
+	
+	<!-- Fuel Prices -->
+	
+<!-- 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-#coalPrice" /> -->
+<!-- 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-#gasPrice" /> -->
+<!-- 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-#biomassPrice" /> -->
+<!-- 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader" -->
+<!-- 		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-#uraniumPrice" /> -->
+		
 	<bean id="demandGrowthTrendNL" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-#demandGrowthTrendNL" />
+		p:filename="/data/Salman/Stochastic Trends/PositiveDGTrends.csv" p:delimiter="," p:variableName="demandGrowthTrendNL-1" />
 	
 	<!-- Fuel Prices -->
 	
 	<bean id="coalPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-#coalPrice" />
+		p:filename="/data/Salman/Stochastic Trends/CoalPriceTrends.csv" p:delimiter="," p:variableName="coalPrice-1" />
 	<bean id="gasPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-#gasPrice" />
+		p:filename="/data/Salman/Stochastic Trends/GasPriceTrends.csv" p:delimiter="," p:variableName="gasPrice-1" />
 	<bean id="biomassPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-#biomassPrice" />
+		p:filename="/data/Salman/Stochastic Trends/BiomassPriceTrends.csv" p:delimiter="," p:variableName="biomassPrice-1" />
 	<bean id="uraniumPrice" class="emlab.gen.trend.TimeSeriesCSVReader"
-		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-#uraniumPrice" />
+		p:filename="/data/Salman/Stochastic Trends/UraniumPriceTrends.csv" p:delimiter="," p:variableName="uraniumPrice-1" />
+		
 	<!-- Substances -->
 	
 	<bean id="coal" class="emlab.gen.domain.technology.Substance" p:name="Coal"
@@ -172,7 +187,7 @@
 	
 	<bean id="dutchElectricitySpotMarket" class="emlab.gen.domain.market.electricity.ElectricitySpotMarket"
 		p:name="Country A electricity spot market" p:auction="false" p:dailyDemandResponseImplemented="true"
-		p:referencePrice="40" p:valueOfLostLoad="3000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
+		p:referencePrice="40" p:valueOfLostLoad="11000" p:lookback="5" p:backlookingForDemandForecastinginDismantling="5"
 		p:storageImplemented="true" >
 		<property name="substance" ref="electricity" />
 		<property name="demandGrowthTrend" ref="demandGrowthTrendNL" />
